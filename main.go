@@ -17,42 +17,48 @@ type Predicate struct {
 }
 
 type Node struct {
-	Nodes      map[string]Node `json:"nodes"`
-	Predicates []Predicate     `json:"predicates"`
+	Nodes      map[string]*Node `json:"nodes"`
+	Predicates []*Predicate     `json:"predicates"`
 }
 
-func buildTree(predicates []Predicate) Node {
+func buildTree(predicates []*Predicate) *Node {
 	tree := createEmptyNode()
 
-	var node Node
-	var ok bool
+	var nodeReference *Node
 
 	for _, predicate := range predicates {
 		keys := mapKeys(predicate.ExpectedPayload)
 		sort.Strings(keys)
 
-		nodeIterator := tree
+		nodeReference = tree
+
 		for _, key := range keys {
-			if node, ok = nodeIterator.Nodes[key]; !ok {
+			var node *Node
+			var ok bool
+
+			if node, ok = nodeReference.Nodes[key]; !ok {
 				node = createEmptyNode()
-				nodeIterator.Nodes[key] = node
+				nodeReference.Nodes[key] = node
 			}
 
-			nodeIterator = node
+			nodeReference = node
 		}
+
+		nodeReference.Predicates = append(nodeReference.Predicates, predicate)
 	}
 
 	return tree
 }
 
-func createEmptyNode() Node {
-	return Node{
-		Nodes: make(map[string]Node),
+func createEmptyNode() *Node {
+	return &Node{
+		Nodes:      make(map[string]*Node),
+		Predicates: make([]*Predicate, 0),
 	}
 }
 
-func searchRelevantPredicates(node Node, keys []string) []Predicate {
-	var foundPredicates []Predicate
+func searchRelevantPredicates(node *Node, keys []string) []*Predicate {
+	var foundPredicates []*Predicate
 
 	foundPredicates = append(foundPredicates, node.Predicates...)
 
@@ -87,7 +93,7 @@ func main() {
 		},
 	}
 
-	p1 := Predicate{
+	p1 := &Predicate{
 		Id: "1",
 		ExpectedPayload: map[string]string{
 			"taitle": "contato",
@@ -95,7 +101,7 @@ func main() {
 		},
 	}
 
-	p2 := Predicate{
+	p2 := &Predicate{
 		Id: "2",
 		ExpectedPayload: map[string]string{
 			"taitle": "contato",
@@ -104,21 +110,21 @@ func main() {
 		},
 	}
 
-	p3 := Predicate{
+	p3 := &Predicate{
 		Id: "3",
 		ExpectedPayload: map[string]string{
 			"url": "/produtos",
 		},
 	}
 
-	p4 := Predicate{
+	p4 := &Predicate{
 		Id: "4",
 		ExpectedPayload: map[string]string{
 			"title": "contato",
 		},
 	}
 
-	p5 := Predicate{
+	p5 := &Predicate{
 		Id: "5",
 		ExpectedPayload: map[string]string{
 			"title": "contato",
@@ -126,13 +132,15 @@ func main() {
 		},
 	}
 
-	tree := buildTree([]Predicate{p1, p2, p3, p4, p5})
-	treeString, _ := json.MarshalIndent(tree, "", "  ")
-	fmt.Println(string(treeString))
+	tree := buildTree([]*Predicate{p1, p2, p3, p4, p5})
+	s, _ := json.MarshalIndent(tree, "", "  ")
+	fmt.Println("tree", string(s))
 
 	keys := mapKeys(event.Payload)
 	sort.Strings(keys)
 
 	predicates := searchRelevantPredicates(tree, keys)
-	fmt.Println("ignore", predicates)
+	for _, predicate := range predicates {
+		fmt.Println("search result", *predicate)
+	}
 }
