@@ -24,30 +24,32 @@ type Node struct {
 func buildTree(predicates []*Predicate) *Node {
 	tree := createEmptyNode()
 
-	var nodeReference *Node
-
 	for _, predicate := range predicates {
-		keys := mapKeys(predicate.ExpectedPayload)
-		sort.Strings(keys)
-
-		nodeReference = tree
-
-		for _, key := range keys {
-			var node *Node
-			var ok bool
-
-			if node, ok = nodeReference.Nodes[key]; !ok {
-				node = createEmptyNode()
-				nodeReference.Nodes[key] = node
-			}
-
-			nodeReference = node
-		}
-
-		nodeReference.Predicates = append(nodeReference.Predicates, predicate)
+		appendPredicate(predicate, tree)
 	}
 
 	return tree
+}
+
+func appendPredicate(predicate *Predicate, tree *Node) {
+	keys := mapKeys(predicate.ExpectedPayload)
+	sort.Strings(keys)
+
+	currentNode := tree
+
+	for _, key := range keys {
+		var node *Node
+		var ok bool
+
+		if node, ok = currentNode.Nodes[key]; !ok {
+			node = createEmptyNode()
+			currentNode.Nodes[key] = node
+		}
+
+		currentNode = node
+	}
+
+	currentNode.Predicates = append(currentNode.Predicates, predicate)
 }
 
 func createEmptyNode() *Node {
