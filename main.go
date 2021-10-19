@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"jeangnc/pattern-matcher/pkg/tree"
 	"sort"
 )
 
@@ -14,64 +15,6 @@ type Event struct {
 type Predicate struct {
 	Id              string            `json:"id"`
 	ExpectedPayload map[string]string `json:"expected_payload"`
-}
-
-type Node struct {
-	Nodes      map[string]*Node `json:"nodes"`
-	Predicates []*Predicate     `json:"predicates"`
-}
-
-func buildTree(predicates []*Predicate) *Node {
-	tree := createEmptyNode()
-
-	for _, predicate := range predicates {
-		appendPredicate(predicate, tree)
-	}
-
-	return tree
-}
-
-func appendPredicate(predicate *Predicate, tree *Node) {
-	keys := mapKeys(predicate.ExpectedPayload)
-	sort.Strings(keys)
-
-	currentNode := tree
-
-	for _, key := range keys {
-		var node *Node
-		var ok bool
-
-		if node, ok = currentNode.Nodes[key]; !ok {
-			node = createEmptyNode()
-			currentNode.Nodes[key] = node
-		}
-
-		currentNode = node
-	}
-
-	currentNode.Predicates = append(currentNode.Predicates, predicate)
-}
-
-func createEmptyNode() *Node {
-	return &Node{
-		Nodes:      make(map[string]*Node),
-		Predicates: make([]*Predicate, 0),
-	}
-}
-
-func searchRelevantPredicates(node *Node, keys []string) []*Predicate {
-	var foundPredicates []*Predicate
-
-	foundPredicates = append(foundPredicates, node.Predicates...)
-
-	for i, key := range keys {
-		if subnode, ok := node.Nodes[key]; ok {
-			result := searchRelevantPredicates(subnode, keys[i+1:])
-			foundPredicates = append(foundPredicates, result...)
-		}
-	}
-
-	return foundPredicates
 }
 
 func mapKeys(hashmap map[string]string) []string {
@@ -134,15 +77,24 @@ func main() {
 		},
 	}
 
-	tree := buildTree([]*Predicate{p1, p2, p3, p4, p5})
+	tree := tree.NewTree()
+
+	predicates := []*Predicate{p1, p2, p3, p4, p5}
+	for _, predicate := range predicates {
+		keys := mapKeys(predicate.ExpectedPayload)
+		sort.Strings(keys)
+
+		tree.Append(keys, predicate)
+	}
+
 	s, _ := json.MarshalIndent(tree, "", "  ")
 	fmt.Println("tree", string(s))
 
 	keys := mapKeys(event.Payload)
 	sort.Strings(keys)
 
-	predicates := searchRelevantPredicates(tree, keys)
-	for _, predicate := range predicates {
-		fmt.Println("search result", *predicate)
+	foundPredicates := tree.Search(keys)
+	for _, predicate := range foundPredicates {
+		fmt.Println("search result", *(predicate.(*Predicate)))
 	}
 }
