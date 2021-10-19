@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"jeangnc/pattern-matcher/pkg/tree"
-	"sort"
 )
 
 type Event struct {
@@ -17,7 +16,7 @@ type Predicate struct {
 	ExpectedPayload map[string]string `json:"expected_payload"`
 }
 
-func mapKeys(hashmap map[string]string) []string {
+func extractKeys(hashmap map[string]string) []string {
 	keys := make([]string, 0, len(hashmap))
 
 	for k := range hashmap {
@@ -32,9 +31,9 @@ func main() {
 		Kind: "visit",
 		Payload: map[string]string{
 			"campo inutil": "qualquer coisa",
-			"taitle":       "jndnka",
-			"title":        "jasdjnkad",
 			"url":          "/contato",
+			"title":        "jasdjnkad",
+			"taitle":       "jndnka",
 		},
 	}
 
@@ -81,8 +80,7 @@ func main() {
 
 	predicates := []*Predicate{p1, p2, p3, p4, p5}
 	for _, predicate := range predicates {
-		keys := mapKeys(predicate.ExpectedPayload)
-		sort.Strings(keys)
+		keys := extractKeys(predicate.ExpectedPayload)
 
 		tree.Append(keys, predicate)
 	}
@@ -90,8 +88,7 @@ func main() {
 	s, _ := json.MarshalIndent(tree, "", "  ")
 	fmt.Println("tree", string(s))
 
-	keys := mapKeys(event.Payload)
-	sort.Strings(keys)
+	keys := extractKeys(event.Payload)
 
 	foundPredicates := tree.Search(keys)
 	for _, predicate := range foundPredicates {
