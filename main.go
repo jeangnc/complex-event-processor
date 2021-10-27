@@ -32,24 +32,14 @@ func extractKeys(hashmap map[string]string) []string {
 	return keys
 }
 
-func main() {
-	event := Event{
-		Kind: "visit",
-		Payload: map[string]string{
-			"campo inutil": "qualquer coisa",
-			"url":          "/contato",
-			"title":        "jasdjnkad",
-			"taitle":       "jndnka",
-		},
-	}
-
+func initializeTree() *tree.Node {
 	c1 := &Condition{
 		Id: "1",
 		Predicates: []Predicate{
 			Predicate{
-				Name:     "taitle",
+				Name:     "origin",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "2",
 			},
 			Predicate{
 				Name:     "title",
@@ -63,9 +53,9 @@ func main() {
 		Id: "2",
 		Predicates: []Predicate{
 			Predicate{
-				Name:     "taitle",
+				Name:     "origin",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "3",
 			},
 			Predicate{
 				Name:     "title",
@@ -134,10 +124,27 @@ func main() {
 	s, _ := json.MarshalIndent(tree, "", "  ")
 	fmt.Println("tree", string(s))
 
+	return tree
+}
+
+func main() {
+	event := Event{
+		Kind: "visit",
+		Payload: map[string]string{
+			"useless": "anything",
+			"url":     "/contact",
+			"title":   "contact",
+			"origin":  "2",
+		},
+	}
+
+	tree := initializeTree()
 	payloadKeys := extractKeys(event.Payload)
 
-	foundPredicates := tree.Search(payloadKeys)
-	for _, condition := range foundPredicates {
-		fmt.Println("search result", *(condition.(*Condition)))
+	foundNodes := tree.Search(payloadKeys)
+	for _, node := range foundNodes {
+		condition := *(node.(*Condition))
+
+		fmt.Println("search result", condition)
 	}
 }
