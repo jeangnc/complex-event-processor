@@ -11,9 +11,15 @@ type Event struct {
 	Payload map[string]string
 }
 
+type Condition struct {
+	Id         string      `json:"id"`
+	Predicates []Predicate `json:"predicates"`
+}
+
 type Predicate struct {
-	Id              string            `json:"id"`
-	ExpectedPayload map[string]string `json:"expected_payload"`
+	Name     string      `json:"name"`
+	Operator string      `json:"operator"`
+	Value    interface{} `json:"value"`
 }
 
 func extractKeys(hashmap map[string]string) []string {
@@ -37,61 +43,101 @@ func main() {
 		},
 	}
 
-	p1 := &Predicate{
+	c1 := &Condition{
 		Id: "1",
-		ExpectedPayload: map[string]string{
-			"taitle": "contato",
-			"title":  "contato",
+		Predicates: []Predicate{
+			Predicate{
+				Name:     "taitle",
+				Operator: "equal",
+				Value:    "contato",
+			},
+			Predicate{
+				Name:     "title",
+				Operator: "equal",
+				Value:    "contato",
+			},
 		},
 	}
 
-	p2 := &Predicate{
+	c2 := &Condition{
 		Id: "2",
-		ExpectedPayload: map[string]string{
-			"taitle": "contato",
-			"title":  "contato",
-			"url":    "/contato",
+		Predicates: []Predicate{
+			Predicate{
+				Name:     "taitle",
+				Operator: "equal",
+				Value:    "contato",
+			},
+			Predicate{
+				Name:     "title",
+				Operator: "equal",
+				Value:    "contato",
+			},
+			Predicate{
+				Name:     "url",
+				Operator: "equal",
+				Value:    "/contato",
+			},
 		},
 	}
 
-	p3 := &Predicate{
+	c3 := &Condition{
 		Id: "3",
-		ExpectedPayload: map[string]string{
-			"url": "/produtos",
+		Predicates: []Predicate{
+			Predicate{
+				Name:     "url",
+				Operator: "equal",
+				Value:    "/produtos",
+			},
 		},
 	}
 
-	p4 := &Predicate{
+	c4 := &Condition{
 		Id: "4",
-		ExpectedPayload: map[string]string{
-			"title": "contato",
+		Predicates: []Predicate{
+			Predicate{
+				Name:     "title",
+				Operator: "equal",
+				Value:    "contato",
+			},
 		},
 	}
 
-	p5 := &Predicate{
+	c5 := &Condition{
 		Id: "5",
-		ExpectedPayload: map[string]string{
-			"title": "contato",
-			"url":   "/contato",
+		Predicates: []Predicate{
+			Predicate{
+				Name:     "title",
+				Operator: "equal",
+				Value:    "contato",
+			},
+			Predicate{
+				Name:     "url",
+				Operator: "equal",
+				Value:    "/contato",
+			},
 		},
 	}
 
 	tree := btree.NewTree()
 
-	predicates := []*Predicate{p1, p2, p3, p4, p5}
-	for _, predicate := range predicates {
-		keys := extractKeys(predicate.ExpectedPayload)
+	conditions := []*Condition{c1, c2, c3, c4, c5}
+	for _, condition := range conditions {
+		keys := make([]string, 0, len(condition.Predicates))
 
-		tree.Append(keys, predicate)
+		for _, predicate := range condition.Predicates {
+			keys = append(keys, predicate.Name)
+		}
+
+		tree.Append(keys, condition)
 	}
 
 	s, _ := json.MarshalIndent(tree, "", "  ")
 	fmt.Println("tree", string(s))
 
-	keys := extractKeys(event.Payload)
+	payloadKeys := extractKeys(event.Payload)
 
-	foundPredicates := tree.Search(keys)
-	for _, predicate := range foundPredicates {
-		fmt.Println("search result", *(predicate.(*Predicate)))
+	foundPredicates := tree.Search(payloadKeys)
+	for _, condition := range foundPredicates {
+		fmt.Println("search result", *(condition.(*Condition)))
 	}
 }
