@@ -44,7 +44,7 @@ func initializeTree() *tree.Node {
 			Predicate{
 				Name:     "title",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "contact",
 			},
 		},
 	}
@@ -60,12 +60,12 @@ func initializeTree() *tree.Node {
 			Predicate{
 				Name:     "title",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "contact",
 			},
 			Predicate{
 				Name:     "url",
 				Operator: "equal",
-				Value:    "/contato",
+				Value:    "/contact",
 			},
 		},
 	}
@@ -76,7 +76,7 @@ func initializeTree() *tree.Node {
 			Predicate{
 				Name:     "url",
 				Operator: "equal",
-				Value:    "/produtos",
+				Value:    "/products",
 			},
 		},
 	}
@@ -87,7 +87,7 @@ func initializeTree() *tree.Node {
 			Predicate{
 				Name:     "title",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "contact",
 			},
 		},
 	}
@@ -98,12 +98,12 @@ func initializeTree() *tree.Node {
 			Predicate{
 				Name:     "title",
 				Operator: "equal",
-				Value:    "contato",
+				Value:    "contact",
 			},
 			Predicate{
 				Name:     "url",
 				Operator: "equal",
-				Value:    "/contato",
+				Value:    "/contact",
 			},
 		},
 	}
@@ -127,6 +127,23 @@ func initializeTree() *tree.Node {
 	return tree
 }
 
+func evaluateCondition(condition *Condition, event *Event) bool {
+	result := true
+
+	for _, predicate := range condition.Predicates {
+		payloadValue := event.Payload[predicate.Name]
+
+		switch predicate.Operator {
+		case "equal":
+			result = result && predicate.Value == payloadValue
+		default:
+			result = false
+		}
+	}
+
+	return result
+}
+
 func main() {
 	event := Event{
 		Kind: "visit",
@@ -143,8 +160,9 @@ func main() {
 
 	foundNodes := tree.Search(payloadKeys)
 	for _, node := range foundNodes {
-		condition := *(node.(*Condition))
+		condition := node.(*Condition)
+		evaluationResult := evaluateCondition(condition, &event)
 
-		fmt.Println("search result", condition)
+		fmt.Println(condition, evaluationResult)
 	}
 }
