@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	btree "jeangnc/pattern-matcher/pkg/btree"
+	tree "jeangnc/pattern-matcher/pkg/tree"
 )
 
 type Event struct {
@@ -118,7 +118,7 @@ func main() {
 		},
 	}
 
-	tree := btree.NewTree()
+	tree := tree.NewTree()
 
 	conditions := []*Condition{c1, c2, c3, c4, c5}
 	for _, condition := range conditions {
