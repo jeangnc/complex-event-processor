@@ -5,32 +5,53 @@ import (
 )
 
 type ConditionTree struct {
-	Tree *Node `json:"tree"`
+	TreeIndex map[string]map[string]*Node `json:"tree_index"`
 }
 
 func NewConditionTree() *ConditionTree {
 	return &ConditionTree{
-		Tree: NewTree(),
+		TreeIndex: make(map[string]map[string]*Node),
 	}
 }
 
-func (conditionTree *ConditionTree) Append(conditions []*types.Condition) {
+func (conditionTree *ConditionTree) Append(condition *types.Condition) {
+	keys := make([]string, 0, len(condition.Predicates))
+
+	for _, predicate := range condition.Predicates {
+		keys = append(keys, predicate.Name)
+	}
+
+	eventTypeIndex, ok := conditionTree.TreeIndex[condition.TenantId]
+	if !ok {
+		eventTypeIndex = make(map[string]*Node)
+		conditionTree.TreeIndex[condition.TenantId] = eventTypeIndex
+	}
+
+	eventTree, ok := eventTypeIndex[condition.EventType]
+	if !ok {
+		eventTree = NewTree()
+		eventTypeIndex[condition.EventType] = eventTree
+	}
+
+	eventTree.Append(keys, condition)
+}
+
+func (conditionTree *ConditionTree) AppendMultiple(conditions []*types.Condition) {
 	for _, condition := range conditions {
-		keys := make([]string, 0, len(condition.Predicates))
-
-		for _, predicate := range condition.Predicates {
-			keys = append(keys, predicate.Name)
-		}
-
-		conditionTree.Tree.Append(keys, condition)
+		conditionTree.Append(condition)
 	}
 }
 
 func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Condition {
-	payloadKeys := extractKeys(event.Payload)
-
-	foundNodes := conditionTree.Tree.Search(payloadKeys)
 	foundConditions := make([]*types.Condition, 0, 0)
+	tree := conditionTree.findTree(event.TenantId, event.Kind)
+
+	if tree == nil {
+		return foundConditions
+	}
+
+	payloadKeys := extractKeys(event.Payload)
+	foundNodes := tree.Search(payloadKeys)
 
 	for _, node := range foundNodes {
 		condition := node.(*types.Condition)
@@ -42,6 +63,20 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 	}
 
 	return foundConditions
+}
+
+func (conditionTree *ConditionTree) findTree(tenantId string, eventType string) *Node {
+	eventTypeIndex, ok := conditionTree.TreeIndex[tenantId]
+	if !ok {
+		return nil
+	}
+
+	eventTree, ok := eventTypeIndex[eventType]
+	if !ok {
+		return nil
+	}
+
+	return eventTree
 }
 
 func extractKeys(hashmap map[string]string) []string {

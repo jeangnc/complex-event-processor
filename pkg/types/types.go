@@ -1,14 +1,17 @@
 package types
 
 type Event struct {
-	Kind    string
-	Payload map[string]string
+	TenantId string
+	Kind     string
+	Payload  map[string]string
 }
 
 type Condition struct {
-	Id            string      `json:"id"`
+	Id            string `json:"id"`
+	TenantId      string
+	EventType     string
 	Predicates    []Predicate `json:"predicates"`
-	DesiredResult *bool
+	DesiredResult *bool       `json:"desired_result"`
 }
 
 type Predicate struct {
