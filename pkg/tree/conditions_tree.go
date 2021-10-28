@@ -36,7 +36,7 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 		condition := node.(*types.Condition)
 		evaluationResult := evaluateCondition(condition, event)
 
-		if condition.DesiredResult != nil && evaluationResult == *condition.DesiredResult {
+		if condition.DesiredResult == nil || evaluationResult == *condition.DesiredResult {
 			foundConditions = append(foundConditions, condition)
 		}
 	}
