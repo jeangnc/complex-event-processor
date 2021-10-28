@@ -1,47 +1,20 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	tree "jeangnc/pattern-matcher/pkg/tree"
+	"jeangnc/pattern-matcher/pkg/tree"
+	"jeangnc/pattern-matcher/pkg/types"
 )
 
-type Event struct {
-	Kind    string
-	Payload map[string]string
-}
-
-type Condition struct {
-	Id         string      `json:"id"`
-	Predicates []Predicate `json:"predicates"`
-}
-
-type Predicate struct {
-	Name     string      `json:"name"`
-	Operator string      `json:"operator"`
-	Value    interface{} `json:"value"`
-}
-
-func extractKeys(hashmap map[string]string) []string {
-	keys := make([]string, 0, len(hashmap))
-
-	for k := range hashmap {
-		keys = append(keys, k)
-	}
-
-	return keys
-}
-
-func initializeTree() *tree.Node {
-	c1 := &Condition{
+func initializeTree() *tree.ConditionTree {
+	c1 := &types.Condition{
 		Id: "1",
-		Predicates: []Predicate{
-			Predicate{
+		Predicates: []types.Predicate{
+			types.Predicate{
 				Name:     "origin",
 				Operator: "equal",
 				Value:    "2",
 			},
-			Predicate{
+			types.Predicate{
 				Name:     "title",
 				Operator: "equal",
 				Value:    "contact",
@@ -49,20 +22,20 @@ func initializeTree() *tree.Node {
 		},
 	}
 
-	c2 := &Condition{
+	c2 := &types.Condition{
 		Id: "2",
-		Predicates: []Predicate{
-			Predicate{
+		Predicates: []types.Predicate{
+			types.Predicate{
 				Name:     "origin",
 				Operator: "equal",
 				Value:    "3",
 			},
-			Predicate{
+			types.Predicate{
 				Name:     "title",
 				Operator: "equal",
 				Value:    "contact",
 			},
-			Predicate{
+			types.Predicate{
 				Name:     "url",
 				Operator: "equal",
 				Value:    "/contact",
@@ -70,10 +43,10 @@ func initializeTree() *tree.Node {
 		},
 	}
 
-	c3 := &Condition{
+	c3 := &types.Condition{
 		Id: "3",
-		Predicates: []Predicate{
-			Predicate{
+		Predicates: []types.Predicate{
+			types.Predicate{
 				Name:     "url",
 				Operator: "equal",
 				Value:    "/products",
@@ -81,10 +54,10 @@ func initializeTree() *tree.Node {
 		},
 	}
 
-	c4 := &Condition{
+	c4 := &types.Condition{
 		Id: "4",
-		Predicates: []Predicate{
-			Predicate{
+		Predicates: []types.Predicate{
+			types.Predicate{
 				Name:     "title",
 				Operator: "equal",
 				Value:    "contact",
@@ -92,15 +65,15 @@ func initializeTree() *tree.Node {
 		},
 	}
 
-	c5 := &Condition{
+	c5 := &types.Condition{
 		Id: "5",
-		Predicates: []Predicate{
-			Predicate{
+		Predicates: []types.Predicate{
+			types.Predicate{
 				Name:     "title",
 				Operator: "equal",
 				Value:    "contact",
 			},
-			Predicate{
+			types.Predicate{
 				Name:     "url",
 				Operator: "equal",
 				Value:    "/contact",
@@ -108,44 +81,15 @@ func initializeTree() *tree.Node {
 		},
 	}
 
-	tree := tree.NewTree()
-
-	conditions := []*Condition{c1, c2, c3, c4, c5}
-	for _, condition := range conditions {
-		keys := make([]string, 0, len(condition.Predicates))
-
-		for _, predicate := range condition.Predicates {
-			keys = append(keys, predicate.Name)
-		}
-
-		tree.Append(keys, condition)
-	}
-
-	s, _ := json.MarshalIndent(tree, "", "  ")
-	fmt.Println("tree", string(s))
+	tree := tree.NewConditionTree()
+	conditions := []*types.Condition{c1, c2, c3, c4, c5}
+	tree.Append(conditions)
 
 	return tree
 }
 
-func evaluateCondition(condition *Condition, event *Event) bool {
-	result := true
-
-	for _, predicate := range condition.Predicates {
-		payloadValue := event.Payload[predicate.Name]
-
-		switch predicate.Operator {
-		case "equal":
-			result = result && predicate.Value == payloadValue
-		default:
-			result = false
-		}
-	}
-
-	return result
-}
-
 func main() {
-	event := Event{
+	event := &types.Event{
 		Kind: "visit",
 		Payload: map[string]string{
 			"useless": "anything",
@@ -156,13 +100,6 @@ func main() {
 	}
 
 	tree := initializeTree()
-	payloadKeys := extractKeys(event.Payload)
 
-	foundNodes := tree.Search(payloadKeys)
-	for _, node := range foundNodes {
-		condition := node.(*Condition)
-		evaluationResult := evaluateCondition(condition, &event)
-
-		fmt.Println(condition, evaluationResult)
-	}
+	tree.Search(event)
 }
