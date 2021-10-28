@@ -3,7 +3,7 @@ package types
 type Event struct {
 	TenantId string
 	Kind     string
-	Payload  map[string]string
+	Payload  map[string]interface{}
 }
 
 type Condition struct {

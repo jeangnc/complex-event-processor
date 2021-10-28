@@ -79,7 +79,7 @@ func (conditionTree *ConditionTree) findTree(tenantId string, eventType string) 
 	return eventTree
 }
 
-func extractKeys(hashmap map[string]string) []string {
+func extractKeys(hashmap map[string]interface{}) []string {
 	keys := make([]string, 0, len(hashmap))
 
 	for k := range hashmap {
