@@ -15,33 +15,6 @@ func NewConditionTree() *ConditionTree {
 	}
 }
 
-func extractKeys(hashmap map[string]string) []string {
-	keys := make([]string, 0, len(hashmap))
-
-	for k := range hashmap {
-		keys = append(keys, k)
-	}
-
-	return keys
-}
-
-func evaluateCondition(condition *types.Condition, event *types.Event) bool {
-	result := true
-
-	for _, predicate := range condition.Predicates {
-		payloadValue := event.Payload[predicate.Name]
-
-		switch predicate.Operator {
-		case "equal":
-			result = result && predicate.Value == payloadValue
-		default:
-			result = false
-		}
-	}
-
-	return result
-}
-
 func (conditionTree *ConditionTree) Append(conditions []*types.Condition) {
 	for _, condition := range conditions {
 		keys := make([]string, 0, len(condition.Predicates))
@@ -72,4 +45,31 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 	}
 
 	return foundConditions
+}
+
+func extractKeys(hashmap map[string]string) []string {
+	keys := make([]string, 0, len(hashmap))
+
+	for k := range hashmap {
+		keys = append(keys, k)
+	}
+
+	return keys
+}
+
+func evaluateCondition(condition *types.Condition, event *types.Event) bool {
+	result := true
+
+	for _, predicate := range condition.Predicates {
+		payloadValue := event.Payload[predicate.Name]
+
+		switch predicate.Operator {
+		case "equal":
+			result = result && predicate.Value == payloadValue
+		default:
+			result = false
+		}
+	}
+
+	return result
 }
