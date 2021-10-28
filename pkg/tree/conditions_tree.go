@@ -1,7 +1,6 @@
 package tree
 
 import (
-	"fmt"
 	"jeangnc/pattern-matcher/pkg/types"
 )
 
@@ -37,9 +36,7 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 		condition := node.(*types.Condition)
 		evaluationResult := evaluateCondition(condition, event)
 
-		fmt.Println(condition, evaluationResult)
-
-		if evaluationResult {
+		if condition.DesiredResult != nil && evaluationResult == *condition.DesiredResult {
 			foundConditions = append(foundConditions, condition)
 		}
 	}

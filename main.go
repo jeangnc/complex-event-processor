@@ -1,13 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"jeangnc/pattern-matcher/pkg/tree"
 	"jeangnc/pattern-matcher/pkg/types"
 )
 
 func initializeTree() *tree.ConditionTree {
+	var desiredResult bool
+
+	desiredResult = true
+
 	c1 := &types.Condition{
-		Id: "1",
+		Id:            "1",
+		DesiredResult: &desiredResult,
 		Predicates: []types.Predicate{
 			types.Predicate{
 				Name:     "origin",
@@ -23,7 +29,8 @@ func initializeTree() *tree.ConditionTree {
 	}
 
 	c2 := &types.Condition{
-		Id: "2",
+		Id:            "2",
+		DesiredResult: &desiredResult,
 		Predicates: []types.Predicate{
 			types.Predicate{
 				Name:     "origin",
@@ -44,7 +51,8 @@ func initializeTree() *tree.ConditionTree {
 	}
 
 	c3 := &types.Condition{
-		Id: "3",
+		Id:            "3",
+		DesiredResult: &desiredResult,
 		Predicates: []types.Predicate{
 			types.Predicate{
 				Name:     "url",
@@ -55,7 +63,8 @@ func initializeTree() *tree.ConditionTree {
 	}
 
 	c4 := &types.Condition{
-		Id: "4",
+		Id:            "4",
+		DesiredResult: &desiredResult,
 		Predicates: []types.Predicate{
 			types.Predicate{
 				Name:     "title",
@@ -101,5 +110,9 @@ func main() {
 
 	tree := initializeTree()
 
-	tree.Search(event)
+	conditions := tree.Search(event)
+
+	for _, condition := range conditions {
+		fmt.Println(condition)
+	}
 }

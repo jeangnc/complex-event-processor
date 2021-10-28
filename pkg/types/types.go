@@ -8,7 +8,7 @@ type Event struct {
 type Condition struct {
 	Id            string      `json:"id"`
 	Predicates    []Predicate `json:"predicates"`
-	DesiredResult bool
+	DesiredResult *bool
 }
 
 type Predicate struct {
