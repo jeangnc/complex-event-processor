@@ -14,7 +14,7 @@ func NewConditionTree() *ConditionTree {
 	}
 }
 
-func (conditionTree *ConditionTree) Append(condition *types.Condition) {
+func (conditionTree *ConditionTree) Append(condition types.Condition) {
 	keys := make([]string, 0, len(condition.Predicates))
 
 	for _, predicate := range condition.Predicates {
@@ -36,13 +36,13 @@ func (conditionTree *ConditionTree) Append(condition *types.Condition) {
 	eventTree.Append(keys, condition)
 }
 
-func (conditionTree *ConditionTree) AppendMultiple(conditions []*types.Condition) {
+func (conditionTree *ConditionTree) AppendMultiple(conditions []types.Condition) {
 	for _, condition := range conditions {
 		conditionTree.Append(condition)
 	}
 }
 
-func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Condition {
+func (conditionTree *ConditionTree) Search(event types.Event) []*types.Condition {
 	foundConditions := make([]*types.Condition, 0, 0)
 	tree := conditionTree.findTree(event.TenantId, event.Kind)
 
@@ -54,11 +54,11 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 	foundNodes := tree.Search(payloadKeys)
 
 	for _, node := range foundNodes {
-		condition := node.(*types.Condition)
+		condition := node.(types.Condition)
 		evaluationResult := evaluateCondition(condition, event)
 
 		if condition.DesiredResult == nil || evaluationResult == *condition.DesiredResult {
-			foundConditions = append(foundConditions, condition)
+			foundConditions = append(foundConditions, &condition)
 		}
 	}
 
@@ -89,7 +89,7 @@ func extractKeys(hashmap map[string]interface{}) []string {
 	return keys
 }
 
-func evaluateCondition(condition *types.Condition, event *types.Event) bool {
+func evaluateCondition(condition types.Condition, event types.Event) bool {
 	result := true
 
 	for _, predicate := range condition.Predicates {
