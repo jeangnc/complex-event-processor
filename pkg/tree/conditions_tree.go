@@ -5,12 +5,12 @@ import (
 )
 
 type ConditionTree struct {
-	TreeIndex map[string]map[string]*Node `json:"tree_index"`
+	treeIndex map[string]map[string]*Node
 }
 
 func NewConditionTree() *ConditionTree {
 	return &ConditionTree{
-		TreeIndex: make(map[string]map[string]*Node),
+		treeIndex: make(map[string]map[string]*Node),
 	}
 }
 
@@ -21,10 +21,10 @@ func (conditionTree *ConditionTree) Append(condition *types.Condition) {
 		keys = append(keys, predicate.Name)
 	}
 
-	eventTypeIndex, ok := conditionTree.TreeIndex[condition.TenantId]
+	eventTypeIndex, ok := conditionTree.treeIndex[condition.TenantId]
 	if !ok {
 		eventTypeIndex = make(map[string]*Node)
-		conditionTree.TreeIndex[condition.TenantId] = eventTypeIndex
+		conditionTree.treeIndex[condition.TenantId] = eventTypeIndex
 	}
 
 	eventTree, ok := eventTypeIndex[condition.EventType]
@@ -66,7 +66,7 @@ func (conditionTree *ConditionTree) Search(event *types.Event) []*types.Conditio
 }
 
 func (conditionTree *ConditionTree) findTree(tenantId string, eventType string) *Node {
-	eventTypeIndex, ok := conditionTree.TreeIndex[tenantId]
+	eventTypeIndex, ok := conditionTree.treeIndex[tenantId]
 	if !ok {
 		return nil
 	}

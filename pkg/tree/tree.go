@@ -3,8 +3,8 @@ package tree
 import "sort"
 
 type Node struct {
-	Nodes map[string]*Node `json:"nodes"`
-	Items []interface{}    `json:"items"`
+	nodes map[string]*Node
+	items []interface{}
 }
 
 func NewTree() *Node {
@@ -19,25 +19,25 @@ func (tree *Node) Append(keys []string, item interface{}) {
 		var node *Node
 		var ok bool
 
-		if node, ok = currentNode.Nodes[key]; !ok {
+		if node, ok = currentNode.nodes[key]; !ok {
 			node = createEmptyNode()
-			currentNode.Nodes[key] = node
+			currentNode.nodes[key] = node
 		}
 
 		currentNode = node
 	}
 
-	currentNode.Items = append(currentNode.Items, item)
+	currentNode.items = append(currentNode.items, item)
 }
 
 func (tree *Node) Search(keys []string) []interface{} {
 	sort.Strings(keys)
 
 	var foundPredicates []interface{}
-	foundPredicates = append(foundPredicates, tree.Items...)
+	foundPredicates = append(foundPredicates, tree.items...)
 
 	for i, key := range keys {
-		if subtree, ok := tree.Nodes[key]; ok {
+		if subtree, ok := tree.nodes[key]; ok {
 			result := subtree.Search(keys[i+1:])
 			foundPredicates = append(foundPredicates, result...)
 		}
@@ -48,7 +48,7 @@ func (tree *Node) Search(keys []string) []interface{} {
 
 func createEmptyNode() *Node {
 	return &Node{
-		Nodes: make(map[string]*Node),
-		Items: make([]interface{}, 0),
+		nodes: make(map[string]*Node),
+		items: make([]interface{}, 0, 0),
 	}
 }
