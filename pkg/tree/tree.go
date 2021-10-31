@@ -1,6 +1,8 @@
 package tree
 
-import "sort"
+import (
+	"sort"
+)
 
 type Node struct {
 	children map[string]*Node
@@ -13,18 +15,19 @@ func NewTree() *Node {
 
 func (node *Node) Append(keys []string, item interface{}) {
 	sort.Strings(keys)
-	currentNode := node
+
+	var childNode, currentNode *Node
+	var ok bool
+
+	currentNode = node
 
 	for _, key := range keys {
-		var node *Node
-		var ok bool
-
-		if node, ok = currentNode.children[key]; !ok {
-			node = createEmptyNode()
-			currentNode.children[key] = node
+		if childNode, ok = currentNode.children[key]; !ok {
+			childNode = createEmptyNode()
+			currentNode.children[key] = childNode
 		}
 
-		currentNode = node
+		currentNode = childNode
 	}
 
 	currentNode.values = append(currentNode.values, item)

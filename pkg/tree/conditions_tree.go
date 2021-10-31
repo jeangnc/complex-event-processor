@@ -8,8 +8,8 @@ type ConditionTree struct {
 	tenantIndex map[string]map[string]*Node
 }
 
-func NewConditionTree() *ConditionTree {
-	return &ConditionTree{
+func NewConditionTree() ConditionTree {
+	return ConditionTree{
 		tenantIndex: make(map[string]map[string]*Node),
 	}
 }
@@ -33,7 +33,7 @@ func (conditionTree *ConditionTree) Append(condition types.Condition) {
 		eventTypeIndex[condition.EventType] = eventTree
 	}
 
-	eventTree.Append(keys, condition)
+	eventTree.Append(keys, &condition)
 }
 
 func (conditionTree *ConditionTree) AppendMultiple(conditions []types.Condition) {
