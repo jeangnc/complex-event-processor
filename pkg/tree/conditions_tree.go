@@ -8,8 +8,8 @@ type ConditionTree struct {
 	tenantIndex map[string]map[string]*Node
 }
 
-func NewConditionTree() ConditionTree {
-	return ConditionTree{
+func NewConditionTree() *ConditionTree {
+	return &ConditionTree{
 		tenantIndex: make(map[string]map[string]*Node),
 	}
 }
