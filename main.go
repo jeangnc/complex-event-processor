@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"jeangnc/pattern-matcher/pkg/serialization"
+	"jeangnc/pattern-matcher/pkg/persistency"
 	"log"
 	"time"
 )
@@ -18,7 +18,7 @@ func main() {
 
 	start := time.Now()
 	fmt.Println("Loading tree")
-	serialization.LoadJsonFile(*filename)
+	persistency.LoadJsonFile(*filename)
 	fmt.Println("Initialization time:", time.Since(start))
 
 	time.Sleep(60 * time.Second)
