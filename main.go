@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"jeangnc/pattern-matcher/pkg/persistency"
+	"jeangnc/pattern-matcher/pkg/persistency/filesystem"
 	"log"
 	"runtime"
 	"time"
@@ -36,7 +36,7 @@ func main() {
 
 	start := time.Now()
 	fmt.Println("Loading tree")
-	persistency.LoadJsonFile(*filename)
+	filesystem.Load(*filename)
 	fmt.Println("Initialization time:", time.Since(start))
 
 	printMemUsage()

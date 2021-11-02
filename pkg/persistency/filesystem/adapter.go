@@ -9,7 +9,7 @@ import (
 	"runtime"
 )
 
-func LoadJsonFile(filename string) *tree.ConditionTree {
+func Load(filename string) *tree.ConditionTree {
 	f, err := os.Open(filename)
 
 	if err != nil {
