@@ -1,4 +1,4 @@
-package serialization
+package persistency
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"runtime"
 )
 
-func LoadJsonFile(filename string) *tree.ConditionTree {
+func LoadFile(filename string) *tree.ConditionTree {
 	f, err := os.Open(filename)
 
 	if err != nil {
