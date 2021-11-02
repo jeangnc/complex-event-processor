@@ -14,27 +14,27 @@ func NewConditionTree() *ConditionTree {
 	}
 }
 
-func (conditionTree *ConditionTree) Append(condition types.Condition) {
+func (c *ConditionTree) Append(condition types.Condition) {
 	keys := make([]string, 0, len(condition.Predicates))
 
 	for _, predicate := range condition.Predicates {
 		keys = append(keys, predicate.Name)
 	}
 
-	eventTree := findTree(condition.TenantId, condition.EventType, true)
+	eventTree := c.findTree(condition.TenantId, condition.EventType, true)
 	eventTree.Append(keys, &condition)
 }
 
-func (conditionTree *ConditionTree) AppendMultiple(conditions []types.Condition) {
+func (c *ConditionTree) AppendMultiple(conditions []types.Condition) {
 	for _, condition := range conditions {
-		conditionTree.Append(condition)
+		c.Append(condition)
 	}
 }
 
-func (conditionTree *ConditionTree) Search(event types.Event) []*types.Condition {
+func (c *ConditionTree) Search(event types.Event) []*types.Condition {
 	foundConditions := make([]*types.Condition, 0, 0)
 
-	tree := conditionTree.findTree(event.TenantId, event.Kind, false)
+	tree := c.findTree(event.TenantId, event.Kind, false)
 	if tree == nil {
 		return foundConditions
 	}
@@ -54,14 +54,14 @@ func (conditionTree *ConditionTree) Search(event types.Event) []*types.Condition
 	return foundConditions
 }
 
-func (conditionTree *ConditionTree) findTree(tenantId string, eventType string, fill bool) *Node {
-	eventTypeIndex, ok := conditionTree.tenantIndex[tenantId]
+func (c *ConditionTree) findTree(tenantId string, eventType string, fill bool) *Node {
+	eventTypeIndex, ok := c.tenantIndex[tenantId]
 	if !ok {
 		if !fill {
 			return nil
 		}
 		eventTypeIndex = make(map[string]*Node)
-		conditionTree.tenantIndex[condition.TenantId] = eventTypeIndex
+		c.tenantIndex[tenantId] = eventTypeIndex
 	}
 
 	eventTree, ok := eventTypeIndex[eventType]
@@ -70,7 +70,7 @@ func (conditionTree *ConditionTree) findTree(tenantId string, eventType string, 
 			return nil
 		}
 		eventTree = NewTree()
-		eventTypeIndex[condition.EventType] = eventTree
+		eventTypeIndex[eventType] = eventTree
 	}
 
 	return eventTree
