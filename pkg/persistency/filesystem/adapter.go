@@ -9,11 +9,21 @@ import (
 	"runtime"
 )
 
-func Load(filename string) *tree.ConditionTree {
-	f, err := os.Open(filename)
+type FilesystemAdapter struct {
+	Filename string
+}
+
+func NewFilesystemAdapter(filename string) *FilesystemAdapter {
+	return &FilesystemAdapter{
+		Filename: filename,
+	}
+}
+
+func (a *FilesystemAdapter) Load() *tree.ConditionTree {
+	f, err := os.Open(a.Filename)
 
 	if err != nil {
-		log.Fatalf("Error to read [file=%v]: %v", filename, err.Error())
+		log.Fatalf("Error to read [file=%v]: %v", a.Filename, err.Error())
 	}
 
 	t := tree.NewConditionTree()

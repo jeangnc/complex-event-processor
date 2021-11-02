@@ -3,11 +3,24 @@ package main
 import (
 	"flag"
 	"fmt"
+	"jeangnc/pattern-matcher/pkg/persistency"
 	"jeangnc/pattern-matcher/pkg/persistency/filesystem"
 	"log"
 	"runtime"
 	"time"
 )
+
+type Options struct {
+	filename string
+}
+
+func buildAdapter(o Options) persistency.Adapter {
+	if o.filename == "" {
+		log.Fatalf("A filename must be provided")
+	}
+
+	return filesystem.NewFilesystemAdapter(o.filename)
+}
 
 // PrintMemUsage outputs the current, total and OS memory being used. As well as the number
 // of garage collection cycles completed.
@@ -30,13 +43,12 @@ func main() {
 	filename := flag.String("filename", "", "The file containing a list of conditions")
 	flag.Parse()
 
-	if *filename == "" {
-		log.Fatalf("A filename must be provided")
-	}
+	options := Options{filename: *filename}
+	adapter := buildAdapter(options)
 
 	start := time.Now()
 	fmt.Println("Loading tree")
-	filesystem.Load(*filename)
+	adapter.Load()
 	fmt.Println("Initialization time:", time.Since(start))
 
 	printMemUsage()
