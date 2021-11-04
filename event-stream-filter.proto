@@ -5,9 +5,13 @@ option go_package = "jeangnc/event-stream-filter/pkg/proto";
 package event_stream_filter;
 
 // The greeting service definition.
-service Greeter {
+service EventStream {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+  // TODO:
+  // add condition
+  // filter event
 }
 
 // The request message containing the user's name.
