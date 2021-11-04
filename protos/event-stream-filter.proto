@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "jeangnc/event-stream-filter/pkg/proto";
 
-package helloworld;
+package event_stream_filter;
 
 // The greeting service definition.
 service Greeter {
