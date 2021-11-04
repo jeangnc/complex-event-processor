@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"jeangnc/pattern-matcher/pkg/persistency"
-	"jeangnc/pattern-matcher/pkg/persistency/filesystem"
+	"jeangnc/event-stream-filter/pkg/persistency"
+	"jeangnc/event-stream-filter/pkg/persistency/filesystem"
 	"log"
 	"runtime"
 	"time"

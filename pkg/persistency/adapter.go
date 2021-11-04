@@ -1,6 +1,6 @@
 package persistency
 
-import "jeangnc/pattern-matcher/pkg/tree"
+import "jeangnc/event-stream-filter/pkg/tree"
 
 type Adapter interface {
 	Load() *tree.ConditionTree

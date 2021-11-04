@@ -1,7 +1,7 @@
 package tree
 
 import (
-	"jeangnc/pattern-matcher/pkg/types"
+	"jeangnc/event-stream-filter/pkg/types"
 )
 
 type ConditionTree struct {

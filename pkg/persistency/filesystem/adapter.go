@@ -2,8 +2,8 @@ package filesystem
 
 import (
 	"encoding/json"
-	"jeangnc/pattern-matcher/pkg/tree"
-	"jeangnc/pattern-matcher/pkg/types"
+	"jeangnc/event-stream-filter/pkg/tree"
+	"jeangnc/event-stream-filter/pkg/types"
 	"log"
 	"os"
 	"runtime"
