@@ -1,4 +1,4 @@
-module jeangnc/pattern-matcher
+module jeangnc/event-stream-filter
 
 go 1.16
 
