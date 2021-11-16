@@ -1,16 +1,12 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"jeangnc/event-stream-filter/pkg/grpc"
 	"jeangnc/event-stream-filter/pkg/persistency"
 	"jeangnc/event-stream-filter/pkg/persistency/filesystem"
-	pb "jeangnc/event-stream-filter/pkg/proto"
 	"log"
-	"net"
 	"runtime"
-
-	"google.golang.org/grpc"
 )
 
 const (
@@ -19,16 +15,6 @@ const (
 
 type Options struct {
 	filename string
-}
-
-type server struct {
-	pb.UnimplementedEventStreamServer
-}
-
-// SayHello implements helloworld.GreeterServer
-func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-	log.Printf("Received: %v", in.GetName())
-	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 func buildAdapter(o Options) persistency.Adapter {
@@ -70,15 +56,6 @@ func main() {
 		fmt.Println("Initialization time:", time.Since(start))
 	*/
 
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
 	s := grpc.NewServer()
-	pb.RegisterEventStreamServer(s, &server{})
-	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	s.Start(port)
 }
