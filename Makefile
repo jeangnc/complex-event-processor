@@ -8,7 +8,6 @@ generate_go_code:
 
 generate_ruby_code:
 	grpc_tools_ruby_protoc \
-		--proto_path=./  \
 		--ruby_out=dist/ruby \
 		--grpc_out=dist/ruby \
 		event-stream-filter.proto
