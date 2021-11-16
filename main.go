@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"jeangnc/event-stream-filter/pkg/grpc"
 	"jeangnc/event-stream-filter/pkg/persistency"
 	"jeangnc/event-stream-filter/pkg/persistency/filesystem"
+	"jeangnc/event-stream-filter/pkg/server"
 	"log"
 	"runtime"
 )
@@ -56,6 +56,6 @@ func main() {
 		fmt.Println("Initialization time:", time.Since(start))
 	*/
 
-	s := grpc.NewServer()
+	s := server.NewGrpcServer()
 	s.Start(port)
 }
