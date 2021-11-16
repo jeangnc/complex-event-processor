@@ -18,8 +18,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EventStreamClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	Filter(ctx context.Context, in *FilterRequest, opts ...grpc.CallOption) (*FilterResponse, error)
+	RegisterCondition(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type eventStreamClient struct {
@@ -30,9 +30,18 @@ func NewEventStreamClient(cc grpc.ClientConnInterface) EventStreamClient {
 	return &eventStreamClient{cc}
 }
 
-func (c *eventStreamClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
-	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, "/event_stream_filter.EventStream/SayHello", in, out, opts...)
+func (c *eventStreamClient) Filter(ctx context.Context, in *FilterRequest, opts ...grpc.CallOption) (*FilterResponse, error) {
+	out := new(FilterResponse)
+	err := c.cc.Invoke(ctx, "/event_stream_filter.EventStream/Filter", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *eventStreamClient) RegisterCondition(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/event_stream_filter.EventStream/RegisterCondition", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +52,8 @@ func (c *eventStreamClient) SayHello(ctx context.Context, in *HelloRequest, opts
 // All implementations must embed UnimplementedEventStreamServer
 // for forward compatibility
 type EventStreamServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	Filter(context.Context, *FilterRequest) (*FilterResponse, error)
+	RegisterCondition(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	mustEmbedUnimplementedEventStreamServer()
 }
 
@@ -52,8 +61,11 @@ type EventStreamServer interface {
 type UnimplementedEventStreamServer struct {
 }
 
-func (UnimplementedEventStreamServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedEventStreamServer) Filter(context.Context, *FilterRequest) (*FilterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Filter not implemented")
+}
+func (UnimplementedEventStreamServer) RegisterCondition(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterCondition not implemented")
 }
 func (UnimplementedEventStreamServer) mustEmbedUnimplementedEventStreamServer() {}
 
@@ -68,20 +80,38 @@ func RegisterEventStreamServer(s grpc.ServiceRegistrar, srv EventStreamServer) {
 	s.RegisterService(&EventStream_ServiceDesc, srv)
 }
 
-func _EventStream_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _EventStream_Filter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FilterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EventStreamServer).SayHello(ctx, in)
+		return srv.(EventStreamServer).Filter(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/event_stream_filter.EventStream/SayHello",
+		FullMethod: "/event_stream_filter.EventStream/Filter",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventStreamServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(EventStreamServer).Filter(ctx, req.(*FilterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EventStream_RegisterCondition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EventStreamServer).RegisterCondition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/event_stream_filter.EventStream/RegisterCondition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EventStreamServer).RegisterCondition(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,8 +124,12 @@ var EventStream_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EventStreamServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _EventStream_SayHello_Handler,
+			MethodName: "Filter",
+			Handler:    _EventStream_Filter_Handler,
+		},
+		{
+			MethodName: "RegisterCondition",
+			Handler:    _EventStream_RegisterCondition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
