@@ -2,8 +2,8 @@ package server
 
 import (
 	"context"
+	"jeangnc/event-stream-filter/pkg/persistency"
 	pb "jeangnc/event-stream-filter/pkg/proto"
-	"jeangnc/event-stream-filter/pkg/tree"
 	"log"
 	"net"
 
@@ -13,14 +13,12 @@ import (
 type grpcServer struct {
 	pb.UnimplementedEventStreamServer
 
-	tree *tree.ConditionTree
+	adapter persistency.Adapter
 }
 
-func NewGrpcServer() *grpcServer {
-	t := tree.NewConditionTree()
-
+func NewGrpcServer(a persistency.Adapter) *grpcServer {
 	return &grpcServer{
-		tree: t,
+		adapter: a,
 	}
 }
 
@@ -41,13 +39,13 @@ func (s *grpcServer) Start(port string) {
 }
 
 func (s *grpcServer) RegisterCondition(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	s.tree.Append(in.Condition)
+	s.adapter.Append(in.Condition)
 
 	return &pb.RegisterResponse{}, nil
 }
 
 func (s *grpcServer) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.FilterResponse, error) {
-	conditions := s.tree.Search(in.Event)
+	conditions := s.adapter.Search(in.Event)
 
 	return &pb.FilterResponse{
 		Event:      in.Event,
