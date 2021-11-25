@@ -1,7 +1,10 @@
 package persistency
 
-import "jeangnc/event-stream-filter/pkg/tree"
+import (
+	pb "jeangnc/event-stream-filter/pkg/proto"
+)
 
 type Adapter interface {
-	Load() *tree.ConditionTree
+	Append(c *pb.Condition)
+	Search(e *pb.Event) []*pb.Condition
 }
