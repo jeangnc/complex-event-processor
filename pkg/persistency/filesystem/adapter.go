@@ -32,7 +32,7 @@ func (a *FilesystemAdapter) Load() *tree.ConditionTree {
 	for d.More() {
 		c := pb.Condition{}
 		d.Decode(&c)
-		t.Append(c)
+		t.Append(&c)
 	}
 
 	// FIXME: remove after tuning memory footprint

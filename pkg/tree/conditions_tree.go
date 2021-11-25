@@ -14,7 +14,7 @@ func NewConditionTree() *ConditionTree {
 	}
 }
 
-func (c *ConditionTree) Append(condition pb.Condition) {
+func (c *ConditionTree) Append(condition *pb.Condition) {
 	keys := make([]string, 0, len(condition.Predicates))
 
 	for _, predicate := range condition.Predicates {
@@ -25,7 +25,7 @@ func (c *ConditionTree) Append(condition pb.Condition) {
 	eventTree.Append(keys, &condition)
 }
 
-func (c *ConditionTree) AppendMultiple(conditions []pb.Condition) {
+func (c *ConditionTree) AppendMultiple(conditions []*pb.Condition) {
 	for _, condition := range conditions {
 		c.Append(condition)
 	}
