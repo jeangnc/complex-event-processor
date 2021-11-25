@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-option go_package = "jeangnc/event-stream-filter/pkg/proto";
+import "google/protobuf/struct.proto";
 
 package event_stream_filter;
+
+option go_package = "jeangnc/event-stream-filter/pkg/proto";
 
 service EventStream {
   rpc Filter (FilterRequest) returns (FilterResponse) {}
@@ -29,7 +31,7 @@ message Event {
   string id = 1;
   string tenant_id = 2;
   string kind = 3;
-  map<string, string> payload = 4;
+  google.protobuf.Struct payload = 4;
 }
 
 message Condition {
@@ -43,5 +45,6 @@ message Condition {
 message Predicate {
   string name = 1;
   string operator = 2;
-  string value = 3;
+  google.protobuf.Value value = 3;
 }
+

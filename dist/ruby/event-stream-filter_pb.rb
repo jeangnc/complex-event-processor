@@ -3,6 +3,7 @@
 
 require 'google/protobuf'
 
+require 'google/protobuf/struct_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("event-stream-filter.proto", :syntax => :proto3) do
     add_message "event_stream_filter.FilterRequest" do
@@ -21,7 +22,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :id, :string, 1
       optional :tenant_id, :string, 2
       optional :kind, :string, 3
-      map :payload, :string, :string, 4
+      optional :payload, :message, 4, "google.protobuf.Struct"
     end
     add_message "event_stream_filter.Condition" do
       optional :id, :string, 1
@@ -33,7 +34,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "event_stream_filter.Predicate" do
       optional :name, :string, 1
       optional :operator, :string, 2
-      optional :value, :string, 3
+      optional :value, :message, 3, "google.protobuf.Value"
     end
   end
 end
