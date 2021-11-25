@@ -22,7 +22,7 @@ func (t *ConditionTree) Append(condition *pb.Condition) {
 	}
 
 	eventTree := t.findTree(condition.TenantId, condition.EventType, true)
-	eventTree.Append(keys, &condition)
+	eventTree.Append(keys, condition)
 }
 
 func (t *ConditionTree) AppendMultiple(conditions []*pb.Condition) {
@@ -31,7 +31,7 @@ func (t *ConditionTree) AppendMultiple(conditions []*pb.Condition) {
 	}
 }
 
-func (t *ConditionTree) Search(event pb.Event) []*pb.Condition {
+func (t *ConditionTree) Search(event *pb.Event) []*pb.Condition {
 	foundConditions := make([]*pb.Condition, 0, 0)
 
 	tree := t.findTree(event.TenantId, event.Kind, false)
@@ -44,11 +44,11 @@ func (t *ConditionTree) Search(event pb.Event) []*pb.Condition {
 	foundNodes := tree.Search(payloadKeys)
 
 	for _, node := range foundNodes {
-		condition := node.(pb.Condition)
+		condition := node.(*pb.Condition)
 		evaluationResult := evaluateCondition(condition, payload)
 
 		if condition.DesiredResult == nil || evaluationResult == *condition.DesiredResult {
-			foundConditions = append(foundConditions, &condition)
+			foundConditions = append(foundConditions, condition)
 		}
 	}
 
@@ -87,7 +87,7 @@ func extractKeys(hashmap map[string]interface{}) []string {
 	return keys
 }
 
-func evaluateCondition(condition pb.Condition, payload map[string]interface{}) bool {
+func evaluateCondition(condition *pb.Condition, payload map[string]interface{}) bool {
 	result := true
 
 	for _, predicate := range condition.Predicates {
