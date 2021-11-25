@@ -9,34 +9,39 @@ import (
 	"runtime"
 )
 
-type FilesystemAdapter struct {
-	Filename string
+type filesystemAdapter struct {
+	tree     *tree.ConditionTree
+	filename string
 }
 
-func NewFilesystemAdapter(filename string) *FilesystemAdapter {
-	return &FilesystemAdapter{
-		Filename: filename,
+func NewFilesystemAdapter(filename string) *filesystemAdapter {
+	return &filesystemAdapter{
+		tree:     tree.NewConditionTree(),
+		filename: filename,
 	}
 }
 
-func (a *FilesystemAdapter) Load() *tree.ConditionTree {
-	f, err := os.Open(a.Filename)
+func (a *filesystemAdapter) Load() *tree.ConditionTree {
+	f, err := os.Open(a.filename)
 
 	if err != nil {
-		log.Fatalf("Error to read [file=%v]: %v", a.Filename, err.Error())
+		log.Fatalf("Error to read [file=%v]: %v", a.filename, err.Error())
 	}
 
-	t := tree.NewConditionTree()
 	d := json.NewDecoder(f)
 
 	for d.More() {
 		c := pb.Condition{}
 		d.Decode(&c)
-		t.Append(&c)
+		a.tree.Append(&c)
 	}
 
 	// FIXME: remove after tuning memory footprint
 	runtime.GC()
 
 	return t
+}
+
+func (a *filesystemAdapter) Append(c *pb.Condition) {
+	// TODO: implement
 }
