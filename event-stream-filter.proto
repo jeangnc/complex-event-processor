@@ -17,7 +17,7 @@ message FilterRequest {
 
 message FilterResponse {
   Event event = 1;
-  repeated Condition condition = 2;
+  repeated Condition conditions = 2;
 }
 
 message RegisterRequest {

@@ -11,7 +11,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "event_stream_filter.FilterResponse" do
       optional :event, :message, 1, "event_stream_filter.Event"
-      repeated :condition, :message, 2, "event_stream_filter.Condition"
+      repeated :conditions, :message, 2, "event_stream_filter.Condition"
     end
     add_message "event_stream_filter.RegisterRequest" do
       optional :condition, :message, 1, "event_stream_filter.Condition"
