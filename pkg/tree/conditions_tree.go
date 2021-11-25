@@ -14,27 +14,27 @@ func NewConditionTree() *ConditionTree {
 	}
 }
 
-func (c *ConditionTree) Append(condition *pb.Condition) {
+func (t *ConditionTree) Append(condition *pb.Condition) {
 	keys := make([]string, 0, len(condition.Predicates))
 
 	for _, predicate := range condition.Predicates {
 		keys = append(keys, predicate.Name)
 	}
 
-	eventTree := c.findTree(condition.TenantId, condition.EventType, true)
+	eventTree := t.findTree(condition.TenantId, condition.EventType, true)
 	eventTree.Append(keys, &condition)
 }
 
-func (c *ConditionTree) AppendMultiple(conditions []*pb.Condition) {
+func (t *ConditionTree) AppendMultiple(conditions []*pb.Condition) {
 	for _, condition := range conditions {
-		c.Append(condition)
+		t.Append(condition)
 	}
 }
 
-func (c *ConditionTree) Search(event pb.Event) []*pb.Condition {
+func (t *ConditionTree) Search(event pb.Event) []*pb.Condition {
 	foundConditions := make([]*pb.Condition, 0, 0)
 
-	tree := c.findTree(event.TenantId, event.Kind, false)
+	tree := t.findTree(event.TenantId, event.Kind, false)
 	if tree == nil {
 		return foundConditions
 	}
@@ -55,14 +55,14 @@ func (c *ConditionTree) Search(event pb.Event) []*pb.Condition {
 	return foundConditions
 }
 
-func (c *ConditionTree) findTree(tenantId string, eventType string, fill bool) *Node {
-	eventTypeIndex, ok := c.tenantIndex[tenantId]
+func (t *ConditionTree) findTree(tenantId string, eventType string, fill bool) *Node {
+	eventTypeIndex, ok := t.tenantIndex[tenantId]
 	if !ok {
 		if !fill {
 			return nil
 		}
 		eventTypeIndex = make(map[string]*Node)
-		c.tenantIndex[tenantId] = eventTypeIndex
+		t.tenantIndex[tenantId] = eventTypeIndex
 	}
 
 	eventTree, ok := eventTypeIndex[eventType]
