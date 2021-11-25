@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	pb "jeangnc/event-stream-filter/pkg/proto"
 	"jeangnc/event-stream-filter/pkg/tree"
 	"log"
@@ -44,7 +43,6 @@ func (s *grpcServer) Start(port string) {
 func (s *grpcServer) RegisterCondition(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	s.tree.Append(in.Condition)
 
-	fmt.Println("resultant tree:", s.tree)
 	return &pb.RegisterResponse{}, nil
 }
 
