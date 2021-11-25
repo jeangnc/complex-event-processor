@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	pb "jeangnc/event-stream-filter/pkg/proto"
+	"jeangnc/event-stream-filter/pkg/tree"
 	"log"
 	"net"
 
@@ -12,10 +13,16 @@ import (
 
 type grpcServer struct {
 	pb.UnimplementedEventStreamServer
+
+	tree *tree.ConditionTree
 }
 
 func NewGrpcServer() *grpcServer {
-	return &grpcServer{}
+	t := tree.NewConditionTree()
+
+	return &grpcServer{
+		tree: t,
+	}
 }
 
 func (s *grpcServer) Start(port string) {
@@ -35,11 +42,17 @@ func (s *grpcServer) Start(port string) {
 }
 
 func (s *grpcServer) RegisterCondition(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	fmt.Println("register request", in.Condition)
+	s.tree.Append(in.Condition)
+
+	fmt.Println("resultant tree:", s.tree)
 	return &pb.RegisterResponse{}, nil
 }
 
 func (s *grpcServer) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.FilterResponse, error) {
-	log.Printf("filter request %v", in)
-	return &pb.FilterResponse{}, nil
+	conditions := s.tree.Search(in.Event)
+
+	return &pb.FilterResponse{
+		Event:      in.Event,
+		Conditions: conditions,
+	}, nil
 }
