@@ -2,8 +2,8 @@ package filesystem
 
 import (
 	"encoding/json"
+	pb "jeangnc/event-stream-filter/pkg/proto"
 	"jeangnc/event-stream-filter/pkg/tree"
-	"jeangnc/event-stream-filter/pkg/types"
 	"log"
 	"os"
 	"runtime"
@@ -30,7 +30,7 @@ func (a *FilesystemAdapter) Load() *tree.ConditionTree {
 	d := json.NewDecoder(f)
 
 	for d.More() {
-		c := types.Condition{}
+		c := pb.Condition{}
 		d.Decode(&c)
 		t.Append(c)
 	}
