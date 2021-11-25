@@ -94,8 +94,8 @@ func evaluateCondition(condition *pb.Condition, payload map[string]interface{}) 
 		payloadValue := payload[predicate.Name]
 
 		switch predicate.Operator {
-		case "equal":
-			result = result && predicate.Value == payloadValue
+		case "equal", "eq":
+			result = result && predicate.Value.GetStringValue() == payloadValue
 		default:
 			result = false
 		}
