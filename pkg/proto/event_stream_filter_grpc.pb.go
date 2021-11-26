@@ -133,5 +133,5 @@ var EventStream_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "event-stream-filter.proto",
+	Metadata: "event_stream_filter.proto",
 }

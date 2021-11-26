@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'json'
-require_relative 'event-stream-filter_services_pb'
+require_relative 'event_stream_filter_services_pb'
 
 stub = EventStreamFilter::EventStream::Stub.new('localhost:8080', :this_channel_is_insecure)
 
@@ -21,8 +21,8 @@ r = EventStreamFilter::RegisterRequest.new(
   )
 )
 
-resp = stub.register_condition(r)
-p "- found #{resp.inspect}"
+# resp = stub.register_condition(r)
+# p "- found #{resp.inspect}"
 
 r = EventStreamFilter::FilterRequest.new(
   event: EventStreamFilter::Event.new(
