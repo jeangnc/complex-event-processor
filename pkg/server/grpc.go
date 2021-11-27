@@ -1,8 +1,6 @@
 package server
 
 import (
-	"context"
-	"jeangnc/event-stream-filter/pkg/persistency"
 	pb "jeangnc/event-stream-filter/pkg/proto"
 	"log"
 	"net"
@@ -11,14 +9,12 @@ import (
 )
 
 type grpcServer struct {
-	pb.UnimplementedEventStreamServer
-
-	adapter persistency.Adapter
+	serverImpl pb.EventStreamServer
 }
 
-func NewGrpcServer(a persistency.Adapter) *grpcServer {
+func NewGrpcServer(s pb.EventStreamServer) *grpcServer {
 	return &grpcServer{
-		adapter: a,
+		serverImpl: s,
 	}
 }
 
@@ -29,26 +25,11 @@ func (s *grpcServer) Start(port string) {
 	}
 
 	g := grpc.NewServer()
-	pb.RegisterEventStreamServer(g, s)
+	pb.RegisterEventStreamServer(g, s.serverImpl)
 
 	log.Printf("server listening at %v", lis.Addr())
 
 	if err := g.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-}
-
-func (s *grpcServer) RegisterCondition(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	s.adapter.Append(in.Condition)
-
-	return &pb.RegisterResponse{}, nil
-}
-
-func (s *grpcServer) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.FilterResponse, error) {
-	conditions := s.adapter.Search(in.Event)
-
-	return &pb.FilterResponse{
-		Event:      in.Event,
-		Conditions: conditions,
-	}, nil
 }
