@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"jeangnc/event-stream-filter/pkg/persistency"
 	pb "jeangnc/event-stream-filter/pkg/proto"
 	"jeangnc/event-stream-filter/pkg/server"
+	"jeangnc/event-stream-filter/pkg/tree"
 )
 
 const (
@@ -13,17 +13,17 @@ const (
 
 type ServerImpl struct {
 	pb.UnimplementedEventStreamServer
-	adapter persistency.Adapter
+	tree *tree.ConditionTree
 }
 
 func (s *ServerImpl) RegisterCondition(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	s.adapter.Append(in.Condition)
+	s.tree.Append(in.Condition)
 
 	return &pb.RegisterResponse{}, nil
 }
 
 func (s *ServerImpl) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.FilterResponse, error) {
-	conditions := s.adapter.Search(in.Event)
+	conditions := s.tree.Search(in.Event)
 
 	return &pb.FilterResponse{
 		Event:      in.Event,
@@ -32,9 +32,9 @@ func (s *ServerImpl) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.Filt
 }
 
 func main() {
-	a := persistency.NewMemoryAdapter()
+	t := tree.NewConditionTree()
 	i := &ServerImpl{
-		adapter: a,
+		tree: t,
 	}
 
 	s := server.NewGrpcServer(i)
