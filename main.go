@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"jeangnc/event-stream-filter/pkg/persistency"
-	"jeangnc/event-stream-filter/pkg/persistency/memory"
 	pb "jeangnc/event-stream-filter/pkg/proto"
 	"jeangnc/event-stream-filter/pkg/server"
 )
@@ -33,7 +32,7 @@ func (s *ServerImpl) Filter(ctx context.Context, in *pb.FilterRequest) (*pb.Filt
 }
 
 func main() {
-	a := memory.NewMemoryAdapter()
+	a := persistency.NewMemoryAdapter()
 	i := &ServerImpl{
 		adapter: a,
 	}

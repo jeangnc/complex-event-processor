@@ -1,4 +1,4 @@
-package memory
+package persistency
 
 import (
 	pb "jeangnc/event-stream-filter/pkg/proto"
