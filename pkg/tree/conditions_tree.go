@@ -1,7 +1,7 @@
 package tree
 
 import (
-	pb "jeangnc/event-stream-filter/pkg/proto"
+	pb "github.com/jeangnc/event-stream-filter/pkg/proto"
 )
 
 type ConditionTree struct {

@@ -1,4 +1,4 @@
-module jeangnc/event-stream-filter
+module github.com/jeangnc/event-stream-filter
 
 go 1.16
 

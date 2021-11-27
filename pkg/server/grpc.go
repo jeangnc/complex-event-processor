@@ -1,9 +1,10 @@
 package server
 
 import (
-	pb "jeangnc/event-stream-filter/pkg/proto"
 	"log"
 	"net"
+
+	pb "github.com/jeangnc/event-stream-filter/pkg/proto"
 
 	"google.golang.org/grpc"
 )

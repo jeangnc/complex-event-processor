@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	pb "jeangnc/event-stream-filter/pkg/proto"
-	"jeangnc/event-stream-filter/pkg/server"
-	"jeangnc/event-stream-filter/pkg/tree"
+
+	pb "github.com/jeangnc/event-stream-filter/pkg/proto"
+	"github.com/jeangnc/event-stream-filter/pkg/server"
+	"github.com/jeangnc/event-stream-filter/pkg/tree"
 )
 
 const (
