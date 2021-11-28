@@ -40,11 +40,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
 end
 
 module EventStreamFilter
-  FilterRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.FilterRequest").msgclass
-  FilterResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.FilterResponse").msgclass
-  RegisterRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.RegisterRequest").msgclass
-  RegisterResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.RegisterResponse").msgclass
-  Event = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Event").msgclass
-  Condition = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Condition").msgclass
-  Predicate = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Predicate").msgclass
+  module Proto
+    FilterRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.FilterRequest").msgclass
+    FilterResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.FilterResponse").msgclass
+    RegisterRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.RegisterRequest").msgclass
+    RegisterResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.RegisterResponse").msgclass
+    Event = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Event").msgclass
+    Condition = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Condition").msgclass
+    Predicate = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("event_stream_filter.Predicate").msgclass
+  end
 end

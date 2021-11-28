@@ -5,6 +5,7 @@ import "google/protobuf/struct.proto";
 package event_stream_filter;
 
 option go_package = "github.com/jeangnc/event-stream-filter/pkg/proto";
+option ruby_package = "EventStreamFilter::Proto";
 
 service EventStream {
   rpc Filter (FilterRequest) returns (FilterResponse) {}
