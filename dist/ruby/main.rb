@@ -1,42 +1,30 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+c = EventStreamFilter::Client.new
 
-require 'json'
-require_relative 'event_stream_filter_services_pb'
-
-stub = EventStreamFilter::EventStream::Stub.new('localhost:8080', :this_channel_is_insecure)
-
-r = EventStreamFilter::RegisterRequest.new(
-  condition: EventStreamFilter::Condition.new(
-    id: 'test',
-    tenant_id: '1',
-    event_type: 'CREATED',
-    predicates: [
-      EventStreamFilter::Predicate.new(
-        name: 'name',
-        operator: 'eq',
-        value: Google::Protobuf::Value.new(string_value: 'test'),
-      )
-    ],
-    desired_result: true
-  )
+condition = EventStreamFilter::Condition.new(
+  id: 'test',
+  tenant_id: '1',
+  event_type: 'CREATED',
+  desired_result: true,
+  predicates: [
+    EventStreamFilter::Predicate.new(
+      name: 'name',
+      operator: 'eq',
+      value: 'test',
+    )
+  ],
 )
 
-# resp = stub.register_condition(r)
-# p "- found #{resp.inspect}"
+c.register_condition(condition)
 
-r = EventStreamFilter::FilterRequest.new(
-  event: EventStreamFilter::Event.new(
-    id: 'test',
-    tenant_id: '1',
-    kind: 'CREATED',
-    payload:  Google::Protobuf::Struct.new(
-      fields: {
-        name: Google::Protobuf::Value.new(string_value: 'test'),
-      }
-    ),
-  )
+event = EventStreamFilter::Event.new(
+  id: 'test',
+  tenant_id: '1',
+  kind: 'CREATED',
+  payload:  {
+    name: 'test',
+  }
 )
 
-resp = stub.filter(r)
-hash = JSON.parse(resp.to_json)
+response = c.filter(event)
+hash = JSON.parse(response.to_json)
 pp hash
