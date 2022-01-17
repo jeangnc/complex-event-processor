@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 
-	pb "github.com/jeangnc/event-stream-filter/pkg/proto"
-	"github.com/jeangnc/event-stream-filter/pkg/server"
-	"github.com/jeangnc/event-stream-filter/pkg/tree"
+	pb "github.com/jeangnc/complex-event-processor/pkg/proto"
+	"github.com/jeangnc/complex-event-processor/pkg/server"
+	"github.com/jeangnc/complex-event-processor/pkg/tree"
 )
 
 const (

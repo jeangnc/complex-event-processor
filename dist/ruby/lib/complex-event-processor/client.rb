@@ -3,11 +3,11 @@
 require 'json'
 require_relative 'condition'
 require_relative 'event'
-require_relative 'proto/event_stream_filter_services_pb'
+require_relative 'proto/complex_event_processor_services_pb'
 
 module EventStreamFilter
   class Client
-    SERVICE_URL = ENV.fetch('EVENT_STREAM_FILTER_URL', 'localhost:8080')
+    SERVICE_URL = ENV.fetch('complex_event_processor_URL', 'localhost:8080')
 
     def initialize(url: SERVICE_URL, security: :this_channel_is_insecure)
       @stub = EventStreamFilter::Proto::EventStream::Stub.new(url, security)

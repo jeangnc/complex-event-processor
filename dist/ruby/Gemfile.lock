@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    event-stream-filter (0.1.0)
+    complex-event-processor (0.1.0)
       grpc (~> 1.41)
 
 GEM
@@ -33,7 +33,7 @@ PLATFORMS
   universal-darwin-21
 
 DEPENDENCIES
-  event-stream-filter!
+  complex-event-processor!
   rake (~> 13.0)
   rspec (~> 3.0)
 

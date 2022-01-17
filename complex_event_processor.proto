@@ -2,10 +2,10 @@ syntax = "proto3";
 
 import "google/protobuf/struct.proto";
 
-package event_stream_filter;
+package complex_event_processor;
 
-option go_package = "github.com/jeangnc/event-stream-filter/pkg/proto";
-option ruby_package = "EventStreamFilter::Proto";
+option go_package = "github.com/jeangnc/complex-event-processor/pkg/proto";
+option ruby_package = "ComplexEventProcessor::Proto";
 
 service EventStream {
   rpc Filter (FilterRequest) returns (FilterResponse) {}

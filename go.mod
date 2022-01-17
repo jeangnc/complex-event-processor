@@ -1,4 +1,4 @@
-module github.com/jeangnc/event-stream-filter
+module github.com/jeangnc/complex-event-processor
 
 go 1.16
 

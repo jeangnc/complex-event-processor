@@ -32,7 +32,7 @@ func NewEventStreamClient(cc grpc.ClientConnInterface) EventStreamClient {
 
 func (c *eventStreamClient) Filter(ctx context.Context, in *FilterRequest, opts ...grpc.CallOption) (*FilterResponse, error) {
 	out := new(FilterResponse)
-	err := c.cc.Invoke(ctx, "/event_stream_filter.EventStream/Filter", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/complex_event_processor.EventStream/Filter", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *eventStreamClient) Filter(ctx context.Context, in *FilterRequest, opts 
 
 func (c *eventStreamClient) RegisterCondition(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, "/event_stream_filter.EventStream/RegisterCondition", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/complex_event_processor.EventStream/RegisterCondition", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func _EventStream_Filter_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/event_stream_filter.EventStream/Filter",
+		FullMethod: "/complex_event_processor.EventStream/Filter",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EventStreamServer).Filter(ctx, req.(*FilterRequest))
@@ -108,7 +108,7 @@ func _EventStream_RegisterCondition_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/event_stream_filter.EventStream/RegisterCondition",
+		FullMethod: "/complex_event_processor.EventStream/RegisterCondition",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EventStreamServer).RegisterCondition(ctx, req.(*RegisterRequest))
@@ -120,7 +120,7 @@ func _EventStream_RegisterCondition_Handler(srv interface{}, ctx context.Context
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventStream_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "event_stream_filter.EventStream",
+	ServiceName: "complex_event_processor.EventStream",
 	HandlerType: (*EventStreamServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -133,5 +133,5 @@ var EventStream_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "event_stream_filter.proto",
+	Metadata: "complex_event_processor.proto",
 }
