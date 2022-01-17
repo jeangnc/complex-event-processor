@@ -2,7 +2,7 @@
 
 require_relative 'predicate'
 
-module EventStreamFilter
+module ComplexEventProcessor
   class Condition
     attr_reader :id, :tenant_id, :event_type, :predicates, :desired_result
 

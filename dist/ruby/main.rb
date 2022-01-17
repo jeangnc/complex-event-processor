@@ -1,12 +1,14 @@
-c = EventStreamFilter::Client.new
+require 'complex-event-processor/client'
 
-condition = EventStreamFilter::Condition.new(
+c = ComplexEventProcessor::Client.new
+
+condition = ComplexEventProcessor::Condition.new(
   id: 'test',
   tenant_id: '1',
   event_type: 'CREATED',
   desired_result: true,
   predicates: [
-    EventStreamFilter::Predicate.new(
+    ComplexEventProcessor::Predicate.new(
       name: 'name',
       operator: 'eq',
       value: 'test',
@@ -16,7 +18,7 @@ condition = EventStreamFilter::Condition.new(
 
 c.register_condition(condition)
 
-event = EventStreamFilter::Event.new(
+event = ComplexEventProcessor::Event.new(
   id: 'test',
   tenant_id: '1',
   kind: 'CREATED',

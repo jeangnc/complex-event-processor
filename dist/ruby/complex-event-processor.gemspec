@@ -4,7 +4,7 @@ require_relative "lib/complex-event-processor/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "complex-event-processor"
-  spec.version       = EventStreamFilter::VERSION
+  spec.version       = ComplexEventProcessor::VERSION
   spec.authors       = ["Jean Carlos Gonçalves"]
   spec.email         = ["jean.gnc@gmail.com"]
 

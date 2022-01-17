@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module EventStreamFilter
+module ComplexEventProcessor
   class Event
     attr_reader :id, :tenant_id, :kind, :payload
 

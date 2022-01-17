@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module EventStreamFilter
+module ComplexEventProcessor
   class Predicate
     attr_reader :name, :operator, :value
 
