@@ -8,21 +8,23 @@ option go_package = "github.com/jeangnc/complex-event-processor/pkg/proto";
 option ruby_package = "ComplexEventProcessor::Proto";
 
 service EventStream {
-  rpc Filter (FilterRequest) returns (FilterResponse) {}
+  rpc Process (ProcessRequest) returns (ProcessResponse) {}
   rpc RegisterCondition (RegisterRequest) returns (RegisterResponse) {}
 }
 
-message FilterRequest {
+message ProcessRequest {
   Event event = 1;
 }
 
-message FilterResponse {
+message ProcessResponse {
   Event event = 1;
   repeated Condition conditions = 2;
+
+  // TODO: inform which expressions were impacted and whats the new result
 }
 
 message RegisterRequest {
-  Condition condition = 1;
+  Expression expression = 1;
 }
 
 message RegisterResponse {
@@ -35,12 +37,18 @@ message Event {
   google.protobuf.Struct payload = 4;
 }
 
-message Condition {
+message Expression {
   string id = 1;
   string tenant_id = 2;
-  string event_type = 3;
-  repeated Predicate predicates = 4;
-  optional bool desired_result = 5;
+
+  // TODO: conditions and logical connective
+  // one of between condition and expression
+}
+
+message Condition {
+  string event_type = 1;
+  repeated Predicate predicates = 2;
+  optional bool desired_result = 3;
 }
 
 message Predicate {
