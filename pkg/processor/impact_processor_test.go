@@ -8,9 +8,9 @@ import (
 // Tests entity and impact capability to merge
 func TestImpactMerge(t *testing.T) {
 	e := Entity{
-		predicates: []string{
-			"test1",
-			"test2",
+		predicates: map[string]bool{
+			"test1": true,
+			"test2": true,
 		},
 	}
 
@@ -22,9 +22,10 @@ func TestImpactMerge(t *testing.T) {
 	}
 
 	e1 := Process(e, i)
-	expected := []string{
-		"test1",
-		"test3",
+	expected := map[string]bool{
+		"test1": true,
+		"test2": false,
+		"test3": true,
 	}
 
 	if !reflect.DeepEqual(e1.predicates, expected) {
@@ -35,7 +36,9 @@ func TestImpactMerge(t *testing.T) {
 
 // Ensure an entity cannot mutate
 func TestEntityImmutabilitty(t *testing.T) {
-	e := Entity{}
+	e := Entity{
+		predicates: map[string]bool{},
+	}
 
 	i := Impact{
 		predicates: map[string]bool{
@@ -45,7 +48,11 @@ func TestEntityImmutabilitty(t *testing.T) {
 
 	Process(e, i)
 
-	if !reflect.DeepEqual(e, Entity{}) {
-		t.Fatalf(`original entity changed`)
+	e1 := Entity{
+		predicates: map[string]bool{},
+	}
+
+	if !reflect.DeepEqual(e, e1) {
+		t.Fatalf(`original entity changed: %v`, e)
 	}
 }
