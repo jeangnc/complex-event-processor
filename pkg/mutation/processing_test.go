@@ -1,4 +1,4 @@
-package processor
+package mutation
 
 import (
 	"reflect"
@@ -34,7 +34,7 @@ func TestImpactMerge(t *testing.T) {
 
 }
 
-// Ensure an entity cannot mutate
+// Ensure entity doesnt mutate
 func TestEntityImmutabilitty(t *testing.T) {
 	e := Entity{
 		predicates: map[string]bool{},

@@ -1,4 +1,4 @@
-package processor
+package mutation
 
 type Entity struct {
 	predicates map[string]bool
@@ -22,6 +22,7 @@ func mergeMap(m1 map[string]bool, m2 map[string]bool) map[string]bool {
 	for k, v := range m2 {
 		newMap[k] = v
 	}
+
 	return newMap
 }
 
