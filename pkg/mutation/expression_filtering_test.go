@@ -49,9 +49,7 @@ func TestImpactIdentification(t *testing.T) {
 				t.Fatalf(`Failed: %s %v`, s.description, s.expectedResult)
 			}
 		})
-
 	}
-
 }
 
 // TODO: ensure relations are considered too
