@@ -1,5 +1,8 @@
 package mutation
 
+// TODO: needing to specify the predicate entity type
+// TODO: need to specify the related entity type
+
 type Changes struct {
 	predicates map[string]bool
 	relations  map[string]bool
@@ -18,3 +21,6 @@ func Impacted(c Changes, e Expression) bool {
 
 	return false
 }
+
+// TODO: related entities share their state.
+//  expressions whose predicate type matches the new related entity type must be impacted
