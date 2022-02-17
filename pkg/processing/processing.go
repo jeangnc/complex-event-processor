@@ -1,4 +1,4 @@
-package mutation
+package processing
 
 import (
 	util "github.com/jeangnc/complex-event-processor/pkg/util"
