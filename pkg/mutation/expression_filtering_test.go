@@ -51,5 +51,3 @@ func TestImpactIdentification(t *testing.T) {
 		})
 	}
 }
-
-// TODO: ensure relations are considered too

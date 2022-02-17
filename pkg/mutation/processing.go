@@ -6,17 +6,14 @@ import (
 
 type Entity struct {
 	predicates map[string]bool
-	relations  map[string]bool
 }
 
 type Impact struct {
 	predicates map[string]bool
-	relations  map[string]bool
 }
 
 func Process(e Entity, i Impact) Entity {
 	return Entity{
 		predicates: util.MergeMap(e.predicates, i.predicates),
-		relations:  util.MergeMap(e.relations, i.relations),
 	}
 }
