@@ -1,6 +1,7 @@
 package processing
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -9,8 +10,8 @@ func TestImpactIdentification(t *testing.T) {
 	type testCase struct {
 		description    string
 		changes        Changes
-		expression     Expression
-		expectedResult bool
+		expressions    []Expression
+		expectedResult []Expression
 	}
 
 	e := Expression{
@@ -18,6 +19,7 @@ func TestImpactIdentification(t *testing.T) {
 			"test",
 		},
 	}
+	es := []Expression{e}
 
 	testCases := []testCase{
 		testCase{
@@ -27,8 +29,8 @@ func TestImpactIdentification(t *testing.T) {
 					"test": false,
 				},
 			},
-			expression:     e,
-			expectedResult: true,
+			expressions:    es,
+			expectedResult: []Expression{e},
 		},
 		testCase{
 			description: "when the expression was not impacted",
@@ -37,15 +39,15 @@ func TestImpactIdentification(t *testing.T) {
 					"test2": false,
 				},
 			},
-			expression:     e,
-			expectedResult: false,
+			expressions:    es,
+			expectedResult: []Expression{},
 		},
 	}
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := Impacted(s.changes, s.expression)
-			if result != s.expectedResult {
+			result := Impacted(s.changes, s.expressions)
+			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s %v`, s.description, s.expectedResult)
 			}
 		})
