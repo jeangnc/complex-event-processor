@@ -18,6 +18,6 @@ type Changes struct {
 
 func Process(e Entity, i Impact) Entity {
 	return Entity{
-		predicates: util.MergeMap(e.predicates, i.predicates),
+		predicates: util.MergeMaps(e.predicates, i.predicates),
 	}
 }

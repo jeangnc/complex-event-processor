@@ -18,7 +18,7 @@ func TestMapMerge(t *testing.T) {
 		"b": true,
 	}
 
-	result := MergeMap(mapA, mapB)
+	result := MergeMaps(mapA, mapB)
 	if !reflect.DeepEqual(result, expectedResult) {
 		t.Fatalf(`Failed to merge %v %v. Result : %v`, mapA, mapB, result)
 	}
