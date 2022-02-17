@@ -12,6 +12,10 @@ type Impact struct {
 	predicates map[string]bool
 }
 
+type Changes struct {
+	predicates map[string]bool
+}
+
 func Process(e Entity, i Impact) Entity {
 	return Entity{
 		predicates: util.MergeMap(e.predicates, i.predicates),

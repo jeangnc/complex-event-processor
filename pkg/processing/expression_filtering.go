@@ -1,9 +1,5 @@
 package processing
 
-type Changes struct {
-	predicates map[string]bool
-}
-
 type Expression struct {
 	predicates []string
 }
