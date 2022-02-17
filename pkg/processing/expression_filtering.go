@@ -4,7 +4,7 @@ type Expression struct {
 	predicates []string
 }
 
-func Impacted(c Changes, es []Expression) []Expression {
+func FilterImpacted(c Changes, es []Expression) []Expression {
 	r := make([]Expression, 0, 0)
 
 	for _, e := range es {

@@ -46,7 +46,7 @@ func TestImpactIdentification(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := Impacted(s.changes, s.expressions)
+			result := FilterImpacted(s.changes, s.expressions)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s %v`, s.description, s.expectedResult)
 			}
