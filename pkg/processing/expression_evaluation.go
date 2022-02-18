@@ -6,20 +6,7 @@ import (
 	util "github.com/jeangnc/complex-event-processor/pkg/util"
 )
 
-const CONNECTOR_AND string = "and"
-const CONNECTOR_OR string = "or"
-
-type LogicalExpression struct {
-	connector  string
-	predicates []ExpressionPredicate
-}
-
-type ExpressionPredicate struct {
-	predicate         string
-	logicalExpression *LogicalExpression
-}
-
-func Evaluate(e Entity, ex Expression) bool {
+func EvaluateExpression(e Entity, ex Expression) bool {
 	return evaluateLogicalExpression(e, ex.logicalExpression)
 }
 

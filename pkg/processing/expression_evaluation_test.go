@@ -77,7 +77,7 @@ func TestEvaluation(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := Evaluate(s.entity, s.expression)
+			result := EvaluateExpression(s.entity, s.expression)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s`, s.description)
 			}
@@ -171,7 +171,7 @@ func TestExpressionNesting(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := Evaluate(s.entity, s.expression)
+			result := EvaluateExpression(s.entity, s.expression)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s`, s.description)
 			}
