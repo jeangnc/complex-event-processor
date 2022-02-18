@@ -14,6 +14,14 @@ func TestEvaluation(t *testing.T) {
 	}
 
 	ex := Expression{
+		logicalExpression: LogicalExpression{
+			connector: CONNECTOR_AND,
+			predicates: []ExpressionPredicate{
+				ExpressionPredicate{
+					predicate: "test",
+				},
+			},
+		},
 		predicates: []string{
 			"test",
 		},
@@ -21,7 +29,7 @@ func TestEvaluation(t *testing.T) {
 
 	testCases := []testCase{
 		testCase{
-			description: "",
+			description: "truthy result",
 			entity: Entity{
 				predicates: map[string]bool{
 					"test": true,
@@ -31,7 +39,7 @@ func TestEvaluation(t *testing.T) {
 			expectedResult: true,
 		},
 		testCase{
-			description: "",
+			description: "falsey result",
 			entity: Entity{
 				predicates: map[string]bool{},
 			},
@@ -44,7 +52,7 @@ func TestEvaluation(t *testing.T) {
 		t.Run(s.description, func(t *testing.T) {
 			result := Evaluate(s.entity, s.expression)
 			if !reflect.DeepEqual(result, s.expectedResult) {
-				t.Fatalf(`Failed: %s %v`, s.description, s.expectedResult)
+				t.Fatalf(`Failed: %s`, s.description)
 			}
 		})
 	}
