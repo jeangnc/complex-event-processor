@@ -1,6 +1,10 @@
 package processing
 
-import "fmt"
+import (
+	"fmt"
+
+	util "github.com/jeangnc/complex-event-processor/pkg/util"
+)
 
 const CONNECTOR_AND string = "and"
 const CONNECTOR_OR string = "or"
@@ -38,33 +42,13 @@ func evaluateLogicalExpression(e Entity, l *LogicalExpression) bool {
 	result := false
 	switch l.connector {
 	case CONNECTOR_AND:
-		result = sliceAll(values)
+		result = util.SliceAll(values)
 	case CONNECTOR_OR:
-		result = sliceAny(values)
+		result = util.SliceAny(values)
 	default:
 		// TODO: properly handle this error
 		panic(fmt.Sprintf("invalid connector %s", l.connector))
 	}
 
 	return result
-}
-
-func sliceAll(s []bool) bool {
-	r := true
-
-	for _, b := range s {
-		r = r && b
-	}
-
-	return r
-}
-
-func sliceAny(s []bool) bool {
-	for _, b := range s {
-		if b {
-			return true
-		}
-	}
-
-	return false
 }
