@@ -3,21 +3,6 @@ package processing
 const CONNECTOR_AND string = "and"
 const CONNECTOR_OR string = "or"
 
-type Expression struct {
-	predicates        []string
-	logicalExpression *LogicalExpression
-}
-
-type LogicalExpression struct {
-	connector  string
-	predicates []ExpressionPredicate
-}
-
-type ExpressionPredicate struct {
-	predicate         string
-	logicalExpression *LogicalExpression
-}
-
 func FilterImpacted(c Changes, es []Expression) []Expression {
 	r := make([]Expression, 0, 0)
 
