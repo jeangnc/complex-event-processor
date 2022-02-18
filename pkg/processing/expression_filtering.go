@@ -2,7 +2,7 @@ package processing
 
 type Expression struct {
 	predicates        []string
-	logicalExpression LogicalExpression
+	logicalExpression *LogicalExpression
 }
 
 func FilterImpacted(c Changes, es []Expression) []Expression {
