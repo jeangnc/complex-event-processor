@@ -19,11 +19,11 @@ func evaluateLogicalExpression(e Entity, l *LogicalExpression) bool {
 			continue
 		}
 
-		if value, ok := e.predicates[p.predicate]; !ok {
-			values = append(values, false)
-		} else {
-			values = append(values, value)
+		value, ok := e.predicates[p.predicate]
+		if !ok {
+			value = false
 		}
+		values = append(values, value)
 	}
 
 	result := false
