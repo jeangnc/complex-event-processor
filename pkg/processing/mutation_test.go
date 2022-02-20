@@ -21,7 +21,7 @@ func TestImpactMerge(t *testing.T) {
 		},
 	}
 
-	e1 := Process(e, i)
+	e1, changes := Process(e, i)
 	expected := map[string]bool{
 		"test1": true,
 		"test2": false,
@@ -32,6 +32,15 @@ func TestImpactMerge(t *testing.T) {
 		t.Fatalf(`predicates list is different than expected: %v`, e1.predicates)
 	}
 
+	expectedChanges := Changes{
+		predicates: map[string]bool{
+			"test2": true,
+			"test3": true,
+		},
+	}
+	if !reflect.DeepEqual(changes, expectedChanges) {
+		t.Fatalf(`changes list is different than expected: %v %v`, changes, expectedChanges)
+	}
 }
 
 // Ensure entity doesnt mutate

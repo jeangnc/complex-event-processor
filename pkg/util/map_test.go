@@ -7,20 +7,25 @@ import (
 
 // Tests whether a set of changes impacted the expression
 func TestMapMerge(t *testing.T) {
-	mapA := map[interface{}]interface{}{
+	mapA := map[string]bool{
 		"a": true,
 	}
-	mapB := map[interface{}]interface{}{
+	mapB := map[string]bool{
 		"b": true,
 	}
-	expectedResult := map[interface{}]interface{}{
+	expectedResult := map[string]bool{
 		"a": true,
 		"b": true,
 	}
 
-	result := MergeMaps(mapA, mapB)
+	result, changes := MergeMaps(mapA, mapB)
 	if !reflect.DeepEqual(result, expectedResult) {
 		t.Fatalf(`Failed to merge %v %v. Result : %v`, mapA, mapB, result)
+	}
+
+	expectedChanges := []string{"b"}
+	if !reflect.DeepEqual(changes, expectedChanges) {
+		t.Fatalf(`Failed to assert changes %v %v. Changes : %v`, mapA, mapB, changes)
 	}
 }
 
