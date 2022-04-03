@@ -5,21 +5,22 @@ import (
 	"testing"
 )
 
-func TestAppend(t *testing.T) {
-	node := NewNode()
+func TestSet(t *testing.T) {
+	root := NewNode()
+	node := root.Traverse([]string{"k1", "k2"})
+
 	value := "my-string"
+	node.Set("1", value)
 
-	node.Append([]string{"k1", "k2"}, "1", value)
-
-	nodeValue := node.find([]string{"k1", "k2"}).value["1"]
+	nodeValue := node.Get("1")
 
 	if !reflect.DeepEqual(nodeValue, value) {
 		t.Fatalf(`Failed to append: %v %v`, nodeValue, value)
 	}
 }
 
-func TestRemove(t *testing.T) {
-	node := Node{
+func TestUnset(t *testing.T) {
+	root := Node{
 		nodes: NodeMap{
 			"k1": Node{
 				value: ValueMap{"1": "my-string"},
@@ -27,9 +28,10 @@ func TestRemove(t *testing.T) {
 		},
 	}
 
-	node.Remove([]string{"k1"}, "1")
+	node := root.Traverse([]string{"k1"})
+	node.Unset("1")
 
-	value := node.nodes["k1"].value["1"]
+	value := node.Get("1")
 
 	if value != nil {
 		t.Fatalf(`Failed to remove: %v`, value)

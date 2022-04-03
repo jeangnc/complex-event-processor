@@ -14,12 +14,34 @@ func NewNode() Node {
 	}
 }
 
-func (n *Node) Append(path []string, key string, value interface{}) {
-	n.find(path).value[key] = value
+func (n *Node) Set(key string, value interface{}) {
+	n.value[key] = value
 }
 
-func (n *Node) Remove(path []string, key string) {
-	delete(n.find(path).value, key)
+func (n *Node) Get(key string) interface{} {
+	return n.value[key]
+}
+
+func (n *Node) Unset(key string) {
+	delete(n.value, key)
+}
+
+func (n *Node) Traverse(path []string) *Node {
+	target := n
+
+	for _, k := range path {
+		next, ok := target.nodes[k]
+
+		if !ok {
+			newNode := NewNode()
+			target.nodes[k] = newNode
+			next = newNode
+		}
+
+		target = &next
+	}
+
+	return target
 }
 
 func (n Node) Values(path []string) []interface{} {
@@ -40,22 +62,4 @@ func (n Node) Values(path []string) []interface{} {
 	}
 
 	return found
-}
-
-func (n *Node) find(path []string) *Node {
-	target := n
-
-	for _, k := range path {
-		next, ok := target.nodes[k]
-
-		if !ok {
-			newNode := NewNode()
-			target.nodes[k] = newNode
-			next = newNode
-		}
-
-		target = &next
-	}
-
-	return target
 }
