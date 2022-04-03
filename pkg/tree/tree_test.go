@@ -38,6 +38,7 @@ func TestUnset(t *testing.T) {
 	}
 }
 
+// ensures correct values fetch over different keys arrangements
 func TestValues(t *testing.T) {
 	n := Node{
 		nodes: NodeMap{

@@ -44,6 +44,7 @@ func (n *Node) Traverse(path []string) *Node {
 	return target
 }
 
+// traverses different arrangements of keys retrieving values along the way
 func (n Node) Values(path []string) []interface{} {
 	var found []interface{}
 
