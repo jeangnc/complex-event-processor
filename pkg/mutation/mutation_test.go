@@ -3,19 +3,21 @@ package mutation
 import (
 	"reflect"
 	"testing"
+
+	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
 // Tests entity and impact capability to merge
 func TestImpactMerge(t *testing.T) {
-	e := Entity{
-		predicates: map[string]bool{
+	e := types.Entity{
+		Predicates: map[string]bool{
 			"test1": true,
 			"test2": true,
 		},
 	}
 
-	i := Impact{
-		predicates: map[string]bool{
+	i := types.Impact{
+		Predicates: map[string]bool{
 			"test2": false,
 			"test3": true,
 		},
@@ -28,12 +30,12 @@ func TestImpactMerge(t *testing.T) {
 		"test3": true,
 	}
 
-	if !reflect.DeepEqual(e1.predicates, expected) {
-		t.Fatalf(`predicates list is different than expected: %v`, e1.predicates)
+	if !reflect.DeepEqual(e1.Predicates, expected) {
+		t.Fatalf(`predicates list is different than expected: %v`, e1.Predicates)
 	}
 
-	expectedChanges := Changes{
-		predicates: map[string]bool{
+	expectedChanges := types.Changes{
+		Predicates: map[string]bool{
 			"test2": true,
 			"test3": true,
 		},
@@ -45,20 +47,20 @@ func TestImpactMerge(t *testing.T) {
 
 // Ensure entity doesnt mutate
 func TestEntityImmutabilitty(t *testing.T) {
-	e := Entity{
-		predicates: map[string]bool{},
+	e := types.Entity{
+		Predicates: map[string]bool{},
 	}
 
-	i := Impact{
-		predicates: map[string]bool{
+	i := types.Impact{
+		Predicates: map[string]bool{
 			"anything": true,
 		},
 	}
 
 	Process(e, i)
 
-	e1 := Entity{
-		predicates: map[string]bool{},
+	e1 := types.Entity{
+		Predicates: map[string]bool{},
 	}
 
 	if !reflect.DeepEqual(e, e1) {

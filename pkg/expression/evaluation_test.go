@@ -3,31 +3,33 @@ package expression
 import (
 	"reflect"
 	"testing"
+
+	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
 func TestEvaluation(t *testing.T) {
 	type testCase struct {
 		description    string
-		entity         Entity
-		expression     Expression
+		entity         types.Entity
+		expression     types.Expression
 		expectedResult bool
 	}
 
-	andEx := Expression{
-		logicalExpression: &LogicalExpression{
-			connector: CONNECTOR_AND,
-			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: Predicate{Id: "a"}},
-				ExpressionPredicate{predicate: Predicate{Id: "b"}},
+	andEx := types.Expression{
+		LogicalExpression: &types.LogicalExpression{
+			Connector: CONNECTOR_AND,
+			Predicates: []types.ExpressionPredicate{
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
 			},
 		},
 	}
-	orEx := Expression{
-		logicalExpression: &LogicalExpression{
-			connector: CONNECTOR_OR,
-			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: Predicate{Id: "a"}},
-				ExpressionPredicate{predicate: Predicate{Id: "b"}},
+	orEx := types.Expression{
+		LogicalExpression: &types.LogicalExpression{
+			Connector: CONNECTOR_OR,
+			Predicates: []types.ExpressionPredicate{
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
 			},
 		},
 	}
@@ -35,8 +37,8 @@ func TestEvaluation(t *testing.T) {
 	testCases := []testCase{
 		testCase{
 			description: "'AND' expression with truthy result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 					"b": true,
 				},
@@ -46,8 +48,8 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'AND' expression with falsey result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 				},
 			},
@@ -56,8 +58,8 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with truthy result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 					"b": false,
 				},
@@ -67,8 +69,8 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with falsey result",
-			entity: Entity{
-				predicates: map[string]bool{},
+			entity: types.Entity{
+				Predicates: map[string]bool{},
 			},
 			expression:     orEx,
 			expectedResult: false,
@@ -88,37 +90,37 @@ func TestEvaluation(t *testing.T) {
 func TestExpressionNesting(t *testing.T) {
 	type testCase struct {
 		description    string
-		entity         Entity
-		expression     Expression
+		entity         types.Entity
+		expression     types.Expression
 		expectedResult bool
 	}
 
-	andEx := Expression{
-		logicalExpression: &LogicalExpression{
-			connector: CONNECTOR_AND,
-			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: Predicate{Id: "a"}},
-				ExpressionPredicate{
-					logicalExpression: &LogicalExpression{
-						connector: CONNECTOR_AND,
-						predicates: []ExpressionPredicate{
-							ExpressionPredicate{predicate: Predicate{Id: "b"}},
+	andEx := types.Expression{
+		LogicalExpression: &types.LogicalExpression{
+			Connector: CONNECTOR_AND,
+			Predicates: []types.ExpressionPredicate{
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
+				types.ExpressionPredicate{
+					LogicalExpression: &types.LogicalExpression{
+						Connector: CONNECTOR_AND,
+						Predicates: []types.ExpressionPredicate{
+							types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
 						},
 					},
 				},
 			},
 		},
 	}
-	orEx := Expression{
-		logicalExpression: &LogicalExpression{
-			connector: CONNECTOR_OR,
-			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: Predicate{Id: "a"}},
-				ExpressionPredicate{
-					logicalExpression: &LogicalExpression{
-						connector: CONNECTOR_AND,
-						predicates: []ExpressionPredicate{
-							ExpressionPredicate{predicate: Predicate{Id: "b"}},
+	orEx := types.Expression{
+		LogicalExpression: &types.LogicalExpression{
+			Connector: CONNECTOR_OR,
+			Predicates: []types.ExpressionPredicate{
+				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
+				types.ExpressionPredicate{
+					LogicalExpression: &types.LogicalExpression{
+						Connector: CONNECTOR_AND,
+						Predicates: []types.ExpressionPredicate{
+							types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
 						},
 					},
 				},
@@ -129,8 +131,8 @@ func TestExpressionNesting(t *testing.T) {
 	testCases := []testCase{
 		testCase{
 			description: "'AND' expression with truthy result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 					"b": true,
 				},
@@ -140,8 +142,8 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'AND' expression with falsey result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 				},
 			},
@@ -150,8 +152,8 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with truthy result",
-			entity: Entity{
-				predicates: map[string]bool{
+			entity: types.Entity{
+				Predicates: map[string]bool{
 					"a": true,
 					"b": false,
 				},
@@ -161,8 +163,8 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with falsey result",
-			entity: Entity{
-				predicates: map[string]bool{},
+			entity: types.Entity{
+				Predicates: map[string]bool{},
 			},
 			expression:     orEx,
 			expectedResult: false,

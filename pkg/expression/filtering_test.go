@@ -3,44 +3,46 @@ package expression
 import (
 	"reflect"
 	"testing"
+
+	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
 // Tests whether a set of changes impacted the expression
 func TestImpactIdentification(t *testing.T) {
 	type testCase struct {
 		description    string
-		changes        Changes
-		expressions    []Expression
-		expectedResult []Expression
+		changes        types.Changes
+		expressions    []types.Expression
+		expectedResult []types.Expression
 	}
 
-	e := Expression{
-		predicates: []Predicate{
-			Predicate{Id: "test"},
+	e := types.Expression{
+		Predicates: []types.Predicate{
+			types.Predicate{Id: "test"},
 		},
 	}
-	es := []Expression{e}
+	es := []types.Expression{e}
 
 	testCases := []testCase{
 		testCase{
 			description: "when the expression was impacted",
-			changes: Changes{
-				predicates: map[string]bool{
+			changes: types.Changes{
+				Predicates: map[string]bool{
 					"test": false,
 				},
 			},
 			expressions:    es,
-			expectedResult: []Expression{e},
+			expectedResult: []types.Expression{e},
 		},
 		testCase{
 			description: "when the expression was not impacted",
-			changes: Changes{
-				predicates: map[string]bool{
+			changes: types.Changes{
+				Predicates: map[string]bool{
 					"test2": false,
 				},
 			},
 			expressions:    es,
-			expectedResult: []Expression{},
+			expectedResult: []types.Expression{},
 		},
 	}
 
