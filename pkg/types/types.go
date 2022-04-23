@@ -1,18 +1,18 @@
 package types
 
 type Expression struct {
-	predicates        []Predicate
-	logicalExpression *LogicalExpression
+	Predicates        []Predicate
+	LogicalExpression *LogicalExpression
 }
 
 type LogicalExpression struct {
-	connector  string
-	predicates []ExpressionPredicate
+	Connector  string
+	Predicates []ExpressionPredicate
 }
 
 type ExpressionPredicate struct {
-	predicate         Predicate
-	logicalExpression *LogicalExpression
+	Predicate         Predicate
+	LogicalExpression *LogicalExpression
 }
 
 type Predicate struct {
@@ -20,13 +20,13 @@ type Predicate struct {
 }
 
 type Entity struct {
-	predicates map[string]bool
+	Predicates map[string]bool
 }
 
 type Impact struct {
-	predicates map[string]bool
+	Predicates map[string]bool
 }
 
 type Changes struct {
-	predicates map[string]bool
+	Predicates map[string]bool
 }
