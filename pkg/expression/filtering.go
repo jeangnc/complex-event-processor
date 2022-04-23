@@ -1,4 +1,4 @@
-package processing
+package expression
 
 const CONNECTOR_AND string = "and"
 const CONNECTOR_OR string = "or"

@@ -1,4 +1,4 @@
-package processing
+package types
 
 type Expression struct {
 	predicates        []Predicate
