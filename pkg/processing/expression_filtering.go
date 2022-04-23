@@ -8,7 +8,7 @@ func FilterImpacted(c Changes, es []Expression) []Expression {
 
 	for _, e := range es {
 		for _, p := range e.predicates {
-			if _, ok := c.predicates[p]; ok {
+			if _, ok := c.predicates[p.Id]; ok {
 				r = append(r, e)
 			}
 		}

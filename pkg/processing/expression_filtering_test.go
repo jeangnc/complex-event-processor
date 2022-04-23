@@ -15,8 +15,8 @@ func TestImpactIdentification(t *testing.T) {
 	}
 
 	e := Expression{
-		predicates: []string{
-			"test",
+		predicates: []Predicate{
+			Predicate{Id: "test"},
 		},
 	}
 	es := []Expression{e}

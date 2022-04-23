@@ -1,7 +1,7 @@
 package processing
 
 type Expression struct {
-	predicates        []string
+	predicates        []Predicate
 	logicalExpression *LogicalExpression
 }
 
@@ -11,8 +11,12 @@ type LogicalExpression struct {
 }
 
 type ExpressionPredicate struct {
-	predicate         string
+	predicate         Predicate
 	logicalExpression *LogicalExpression
+}
+
+type Predicate struct {
+	Id string
 }
 
 type Entity struct {

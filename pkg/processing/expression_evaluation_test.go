@@ -17,8 +17,8 @@ func TestEvaluation(t *testing.T) {
 		logicalExpression: &LogicalExpression{
 			connector: CONNECTOR_AND,
 			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: "a"},
-				ExpressionPredicate{predicate: "b"},
+				ExpressionPredicate{predicate: Predicate{Id: "a"}},
+				ExpressionPredicate{predicate: Predicate{Id: "b"}},
 			},
 		},
 	}
@@ -26,8 +26,8 @@ func TestEvaluation(t *testing.T) {
 		logicalExpression: &LogicalExpression{
 			connector: CONNECTOR_OR,
 			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: "a"},
-				ExpressionPredicate{predicate: "b"},
+				ExpressionPredicate{predicate: Predicate{Id: "a"}},
+				ExpressionPredicate{predicate: Predicate{Id: "b"}},
 			},
 		},
 	}
@@ -97,12 +97,12 @@ func TestExpressionNesting(t *testing.T) {
 		logicalExpression: &LogicalExpression{
 			connector: CONNECTOR_AND,
 			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: "a"},
+				ExpressionPredicate{predicate: Predicate{Id: "a"}},
 				ExpressionPredicate{
 					logicalExpression: &LogicalExpression{
 						connector: CONNECTOR_AND,
 						predicates: []ExpressionPredicate{
-							ExpressionPredicate{predicate: "b"},
+							ExpressionPredicate{predicate: Predicate{Id: "b"}},
 						},
 					},
 				},
@@ -113,12 +113,12 @@ func TestExpressionNesting(t *testing.T) {
 		logicalExpression: &LogicalExpression{
 			connector: CONNECTOR_OR,
 			predicates: []ExpressionPredicate{
-				ExpressionPredicate{predicate: "a"},
+				ExpressionPredicate{predicate: Predicate{Id: "a"}},
 				ExpressionPredicate{
 					logicalExpression: &LogicalExpression{
 						connector: CONNECTOR_AND,
 						predicates: []ExpressionPredicate{
-							ExpressionPredicate{predicate: "b"},
+							ExpressionPredicate{predicate: Predicate{Id: "b"}},
 						},
 					},
 				},

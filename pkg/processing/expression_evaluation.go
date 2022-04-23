@@ -19,7 +19,7 @@ func evaluateLogicalExpression(e Entity, l *LogicalExpression) bool {
 			continue
 		}
 
-		value, ok := e.predicates[p.predicate]
+		value, ok := e.predicates[p.predicate.Id]
 		if !ok {
 			value = false
 		}
