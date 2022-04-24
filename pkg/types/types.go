@@ -1,8 +1,21 @@
 package types
 
 type Expression struct {
+	TenantId          string
 	Predicates        []Predicate
 	LogicalExpression *LogicalExpression
+}
+
+type Predicate struct {
+	Id         string
+	EventType  string
+	Conditions []Condition
+}
+
+type Condition struct {
+	Field    string
+	Operator string
+	Value    interface{}
 }
 
 type LogicalExpression struct {
@@ -15,8 +28,10 @@ type ExpressionPredicate struct {
 	LogicalExpression *LogicalExpression
 }
 
-type Predicate struct {
-	Id string
+type Event struct {
+	TenantId string
+	Type     string
+	Payload  map[string]interface{}
 }
 
 type Entity struct {
