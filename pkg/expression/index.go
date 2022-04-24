@@ -18,7 +18,7 @@ type Index struct {
 	predicateTree tree.Node
 }
 
-type PredicateExpressionMap map[string][]*types.Expression
+type PredicateExpressionMap map[string][]types.Expression
 
 func NewIndex() Index {
 	return Index{
@@ -27,7 +27,7 @@ func NewIndex() Index {
 	}
 }
 
-func (i *Index) Search(e types.Event) types.Impact {
+func (i Index) SearchImpactedPredicates(e types.Event) types.Impact {
 	keys := extractPayloadKeys(e)
 	values := i.predicateTree.Values(keys)
 
@@ -41,6 +41,22 @@ func (i *Index) Search(e types.Event) types.Impact {
 	return types.Impact{Predicates: r}
 }
 
+func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
+	r := make([]types.Expression, 0, 0)
+
+	for p, _ := range c.Predicates {
+		es, ok := i.expressionMap[p]
+
+		if !ok {
+			continue
+		}
+
+		r = append(r, es...)
+	}
+
+	return r
+}
+
 func (i *Index) Append(e types.Expression) {
 	for _, p := range e.Predicates {
 		keys := append([]string{e.TenantId}, extractPredicateKeys(p)...)
@@ -49,9 +65,9 @@ func (i *Index) Append(e types.Expression) {
 		n.Set(p.Id, p)
 
 		if _, ok := i.expressionMap[p.Id]; !ok {
-			i.expressionMap[p.Id] = make([]*types.Expression, 0)
+			i.expressionMap[p.Id] = make([]types.Expression, 0)
 		}
-		i.expressionMap[p.Id] = append(i.expressionMap[p.Id], &e)
+		i.expressionMap[p.Id] = append(i.expressionMap[p.Id], e)
 	}
 }
 
