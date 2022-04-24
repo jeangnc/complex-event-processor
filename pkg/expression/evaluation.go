@@ -7,6 +7,9 @@ import (
 	util "github.com/jeangnc/complex-event-processor/pkg/util"
 )
 
+const CONNECTOR_AND string = "and"
+const CONNECTOR_OR string = "or"
+
 func EvaluateExpression(e types.Entity, ex types.Expression) bool {
 	return evaluateLogicalExpression(e, ex.LogicalExpression)
 }
