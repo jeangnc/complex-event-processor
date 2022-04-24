@@ -31,14 +31,19 @@ func (i Index) SearchImpactedPredicates(e types.Event) types.Impact {
 	keys := extractPayloadKeys(e)
 	values := i.predicateTree.Values(keys)
 
-	r := map[string]bool{}
+	result := map[string]bool{}
 
 	for _, v := range values {
 		p := v.(types.Predicate)
-		r[p.Id] = evaluateConditions(e, p)
+		r := evaluateConditions(e, p)
+
+		// immutable false results are irrelevant
+		if !p.Immutable || r {
+			result[p.Id] = r
+		}
 	}
 
-	return types.Impact{Predicates: r}
+	return types.Impact{Predicates: result}
 }
 
 func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {

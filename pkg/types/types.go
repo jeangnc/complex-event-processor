@@ -10,6 +10,7 @@ type Predicate struct {
 	Id         string
 	EventType  string
 	Conditions []Condition
+	Immutable  bool
 }
 
 type Condition struct {

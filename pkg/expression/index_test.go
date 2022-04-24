@@ -9,52 +9,127 @@ import (
 
 // Test wheter we can identify which predicates were impacted
 func TestImpactedPredicatesSearch(t *testing.T) {
+	type testCase struct {
+		description    string
+		event          types.Event
+		predicate      types.Predicate
+		expectedResult types.Impact
+	}
+
 	tenantId := "1"
 
-	p := types.Predicate{
-		Id:        "my-predicate",
-		EventType: "EMAIL_OPENED",
-		Conditions: []types.Condition{
-			types.Condition{
-				Field:    "email",
-				Operator: OPERATOR_EQUAL,
-				Value:    "test",
-			},
-		},
-	}
-
-	ex := types.Expression{
-		TenantId:   tenantId,
-		Predicates: []types.Predicate{p},
-		LogicalExpression: types.LogicalExpression{
-			Connector: CONNECTOR_AND,
-			Predicates: []types.ExpressionPredicate{
-				types.ExpressionPredicate{Predicate: p},
-			},
-		},
-	}
-
-	e := types.Event{
+	event := types.Event{
 		TenantId: tenantId,
-		Type:     "EMAIL_OPENED",
+		Type:     "MY_TYPE",
 		Payload: map[string]interface{}{
 			"email": "test",
 		},
 	}
 
-	i := NewIndex()
-	i.Append(ex)
-
-	result := i.SearchImpactedPredicates(e)
-
-	expectedResult := types.Impact{
-		Predicates: map[string]bool{
-			"my-predicate": true,
+	testCases := []testCase{
+		testCase{
+			description: "truthy single condition",
+			event:       event,
+			predicate: types.Predicate{
+				Id:        "my-predicate",
+				EventType: "MY_TYPE",
+				Conditions: []types.Condition{
+					types.Condition{
+						Field:    "email",
+						Operator: OPERATOR_EQUAL,
+						Value:    "test",
+					},
+				},
+			},
+			expectedResult: types.Impact{
+				Predicates: map[string]bool{
+					"my-predicate": true,
+				},
+			},
+		},
+		testCase{
+			description: "falsey single condition",
+			event:       event,
+			predicate: types.Predicate{
+				Id:        "my-predicate",
+				EventType: "MY_TYPE",
+				Conditions: []types.Condition{
+					types.Condition{
+						Field:    "email",
+						Operator: OPERATOR_EQUAL,
+						Value:    "different-test",
+					},
+				},
+			},
+			expectedResult: types.Impact{
+				Predicates: map[string]bool{
+					"my-predicate": false,
+				},
+			},
+		},
+		testCase{
+			description: "falsey immutable condition",
+			event:       event,
+			predicate: types.Predicate{
+				Id:        "my-predicate",
+				EventType: "MY_TYPE",
+				Immutable: true,
+				Conditions: []types.Condition{
+					types.Condition{
+						Field:    "email",
+						Operator: OPERATOR_EQUAL,
+						Value:    "different-test",
+					},
+				},
+			},
+			expectedResult: types.Impact{
+				Predicates: map[string]bool{},
+			},
+		},
+		testCase{
+			description: "empty predicate",
+			event:       event,
+			predicate: types.Predicate{
+				Id:         "my-predicate",
+				EventType:  "MY_TYPE",
+				Conditions: []types.Condition{},
+			},
+			expectedResult: types.Impact{
+				Predicates: map[string]bool{
+					"my-predicate": true,
+				},
+			},
+		},
+		testCase{
+			description: "different event type",
+			event:       event,
+			predicate: types.Predicate{
+				Id:         "my-predicate",
+				EventType:  "MY_OTHER_TYPE",
+				Conditions: []types.Condition{},
+			},
+			expectedResult: types.Impact{
+				Predicates: map[string]bool{},
+			},
 		},
 	}
 
-	if !reflect.DeepEqual(result, expectedResult) {
-		t.Fatalf(`Failed to search impacted expressions: %v %v`, result, expectedResult)
+	for _, s := range testCases {
+		t.Run(s.description, func(t *testing.T) {
+			ex := types.Expression{
+				TenantId:   tenantId,
+				Predicates: []types.Predicate{s.predicate},
+			}
+
+			i := NewIndex()
+			i.Append(ex)
+
+			result := i.SearchImpactedPredicates(s.event)
+
+			if !reflect.DeepEqual(result, s.expectedResult) {
+				t.Fatalf(`Failed to search impacted expressions: %v %v`, result, s.expectedResult)
+			}
+		})
 	}
 }
 
