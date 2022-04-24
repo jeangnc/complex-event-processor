@@ -20,6 +20,7 @@ func main() {
 	p := types.Predicate{
 		Id:        "my-predicate",
 		EventType: "EMAIL_OPENED",
+		Immutable: true,
 		Conditions: []types.Condition{
 			types.Condition{
 				Field:    "email",
@@ -57,7 +58,7 @@ func main() {
 		TenantId: tenantId,
 		Type:     "EMAIL_OPENED",
 		Payload: map[string]interface{}{
-			"email": "test",
+			"email": "test 2",
 		},
 	}
 
