@@ -11,7 +11,7 @@ const CONNECTOR_AND string = "and"
 const CONNECTOR_OR string = "or"
 
 func EvaluateExpression(e types.Entity, ex types.Expression) bool {
-	return evaluateLogicalExpression(e, ex.LogicalExpression)
+	return evaluateLogicalExpression(e, &ex.LogicalExpression)
 }
 
 func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool {

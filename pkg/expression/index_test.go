@@ -26,7 +26,7 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 	ex := types.Expression{
 		TenantId:   tenantId,
 		Predicates: []types.Predicate{p},
-		LogicalExpression: &types.LogicalExpression{
+		LogicalExpression: types.LogicalExpression{
 			Connector: CONNECTOR_AND,
 			Predicates: []types.ExpressionPredicate{
 				types.ExpressionPredicate{Predicate: p},

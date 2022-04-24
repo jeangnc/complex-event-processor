@@ -3,7 +3,7 @@ package types
 type Expression struct {
 	TenantId          string
 	Predicates        []Predicate
-	LogicalExpression *LogicalExpression
+	LogicalExpression LogicalExpression
 }
 
 type Predicate struct {

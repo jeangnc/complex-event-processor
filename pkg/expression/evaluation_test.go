@@ -16,7 +16,7 @@ func TestEvaluation(t *testing.T) {
 	}
 
 	andEx := types.Expression{
-		LogicalExpression: &types.LogicalExpression{
+		LogicalExpression: types.LogicalExpression{
 			Connector: CONNECTOR_AND,
 			Predicates: []types.ExpressionPredicate{
 				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
@@ -25,7 +25,7 @@ func TestEvaluation(t *testing.T) {
 		},
 	}
 	orEx := types.Expression{
-		LogicalExpression: &types.LogicalExpression{
+		LogicalExpression: types.LogicalExpression{
 			Connector: CONNECTOR_OR,
 			Predicates: []types.ExpressionPredicate{
 				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
@@ -96,7 +96,7 @@ func TestExpressionNesting(t *testing.T) {
 	}
 
 	andEx := types.Expression{
-		LogicalExpression: &types.LogicalExpression{
+		LogicalExpression: types.LogicalExpression{
 			Connector: CONNECTOR_AND,
 			Predicates: []types.ExpressionPredicate{
 				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
@@ -112,7 +112,7 @@ func TestExpressionNesting(t *testing.T) {
 		},
 	}
 	orEx := types.Expression{
-		LogicalExpression: &types.LogicalExpression{
+		LogicalExpression: types.LogicalExpression{
 			Connector: CONNECTOR_OR,
 			Predicates: []types.ExpressionPredicate{
 				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
