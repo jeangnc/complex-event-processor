@@ -16,7 +16,7 @@ func TestIndex(t *testing.T) {
 		Conditions: []types.Condition{
 			types.Condition{
 				Field:    "email",
-				Operator: "eq",
+				Operator: OPERATOR_EQUAL,
 				Value:    "test",
 			},
 		},
