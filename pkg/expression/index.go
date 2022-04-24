@@ -98,7 +98,6 @@ func evaluateConditions(e types.Event, p types.Predicate) bool {
 				return false
 			}
 		default:
-			// TODO: properly handle this error
 			panic(fmt.Sprintf("invalid operator %s", c.Operator))
 		}
 	}

@@ -37,7 +37,6 @@ func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool 
 	case CONNECTOR_OR:
 		result = util.SliceAny(values)
 	default:
-		// TODO: properly handle this error
 		panic(fmt.Sprintf("invalid connector %s", l.Connector))
 	}
 
