@@ -62,8 +62,8 @@ func eventHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/event", eventHandler)
-	router.HandleFunc("/expression", expressionHandler)
+	router.HandleFunc("/event", eventHandler).Methods("POST")
+	router.HandleFunc("/expression", expressionHandler).Methods("POST")
 	log.Print("Listening on ", port)
 	log.Fatal(http.ListenAndServe(port, router))
 }
