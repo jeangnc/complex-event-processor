@@ -1,38 +1,40 @@
 package types
 
 type Expression struct {
-	TenantId          string
-	Predicates        []Predicate
-	LogicalExpression LogicalExpression
+	Id                string            `json:"id"`
+	TenantId          string            `json:"tenant_id"`
+	Predicates        []Predicate       `json:"predicates"`
+	LogicalExpression LogicalExpression `json:"logical_expression"`
 }
 
 type Predicate struct {
-	Id         string
-	EventType  string
-	Conditions []Condition
-	Immutable  bool
+	Id         string      `json:"id"`
+	EventType  string      `json:"event_type"`
+	Conditions []Condition `json:"conditions"`
+	Immutable  bool        `json:"immutable"`
 }
 
 type Condition struct {
-	Field    string
-	Operator string
-	Value    interface{}
+	Field    string      `json:"field"`
+	Operator string      `json:"operator"`
+	Value    interface{} `json:"value"`
 }
 
 type LogicalExpression struct {
-	Connector  string
-	Predicates []ExpressionPredicate
+	Connector  string                `json:"connector"`
+	Predicates []ExpressionPredicate `json:"predicates"`
 }
 
 type ExpressionPredicate struct {
-	Predicate         Predicate
-	LogicalExpression *LogicalExpression
+	Predicate         Predicate          `json:"predicate,omitempty"`
+	LogicalExpression *LogicalExpression `json:"logical_expression,omitempty"`
 }
 
 type Event struct {
-	TenantId string
-	Type     string
-	Payload  map[string]interface{}
+	Id       string                 `json:"id"`
+	TenantId string                 `json:"tenant_id"`
+	Type     string                 `json:"type"`
+	Payload  map[string]interface{} `json:"payload"`
 }
 
 type Entity struct {
