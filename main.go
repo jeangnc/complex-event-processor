@@ -64,6 +64,6 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/event", eventHandler).Methods("POST")
 	router.HandleFunc("/expression", expressionHandler).Methods("POST")
-	log.Print("Listening on ", port)
+	log.Print("Listening to ", port)
 	log.Fatal(http.ListenAndServe(port, router))
 }
