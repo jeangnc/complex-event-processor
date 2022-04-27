@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
@@ -17,8 +16,6 @@ func NewExpressionHandler(index expression.Index) func(w http.ResponseWriter, r 
 		if err != nil {
 			fmt.Fprintf(w, "Invalid expression")
 		}
-
-		log.Print("Received an expression: ", string(body))
 
 		var ex types.Expression
 		json.Unmarshal(body, &ex)

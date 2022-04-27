@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
@@ -20,8 +19,6 @@ func NewEventHandler(index expression.Index) func(w http.ResponseWriter, r *http
 		if err != nil {
 			fmt.Fprintf(w, "Invalid event")
 		}
-
-		log.Print("Received an event: ", string(body))
 
 		var e types.Event
 		json.Unmarshal(body, &e)
