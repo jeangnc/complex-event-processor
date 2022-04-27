@@ -63,11 +63,11 @@ func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
 }
 
 func (i *Index) Append(e types.Expression) {
-	for _, p := range e.Predicates {
+	for _, p := range e.LogicalExpression.Predicates() {
 		keys := append([]string{e.TenantId}, extractPredicateKeys(p)...)
 
 		n := i.predicateTree.Traverse(keys)
-		n.Set(p.Id, p)
+		n.Set(p.Id, *p)
 
 		if _, ok := i.expressionMap[p.Id]; !ok {
 			i.expressionMap[p.Id] = make([]types.Expression, 0)
@@ -85,7 +85,7 @@ func extractPayloadKeys(e types.Event) []string {
 	return keys
 }
 
-func extractPredicateKeys(p types.Predicate) []string {
+func extractPredicateKeys(p *types.Predicate) []string {
 	fields := make([]string, 0, len(p.Conditions))
 
 	for _, c := range p.Conditions {

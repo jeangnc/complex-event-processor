@@ -7,9 +7,6 @@ import (
 	util "github.com/jeangnc/complex-event-processor/pkg/util"
 )
 
-const CONNECTOR_AND string = "and"
-const CONNECTOR_OR string = "or"
-
 func EvaluateExpression(e types.Entity, ex types.Expression) bool {
 	return evaluateLogicalExpression(e, &ex.LogicalExpression)
 }
@@ -17,13 +14,13 @@ func EvaluateExpression(e types.Entity, ex types.Expression) bool {
 func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool {
 	values := make([]bool, 0, 0)
 
-	for _, p := range l.Predicates {
-		if p.LogicalExpression != nil {
-			values = append(values, evaluateLogicalExpression(e, p.LogicalExpression))
+	for _, o := range l.Operands {
+		if o.LogicalExpression != nil {
+			values = append(values, evaluateLogicalExpression(e, o.LogicalExpression))
 			continue
 		}
 
-		value, ok := e.Predicates[p.Predicate.Id]
+		value, ok := e.Predicates[o.Predicate.Id]
 		if !ok {
 			value = false
 		}
@@ -32,9 +29,9 @@ func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool 
 
 	result := false
 	switch l.Connector {
-	case CONNECTOR_AND:
+	case types.CONNECTOR_AND:
 		result = util.SliceAll(values)
-	case CONNECTOR_OR:
+	case types.CONNECTOR_OR:
 		result = util.SliceAny(values)
 	default:
 		panic(fmt.Sprintf("invalid connector %s", l.Connector))

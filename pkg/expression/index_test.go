@@ -117,8 +117,13 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
 			ex := types.Expression{
-				TenantId:   tenantId,
-				Predicates: []types.Predicate{s.predicate},
+				TenantId: tenantId,
+				LogicalExpression: types.LogicalExpression{
+					Connector: types.CONNECTOR_AND,
+					Operands: []types.Operand{
+						types.Operand{Predicate: &s.predicate},
+					},
+				},
 			}
 
 			i := NewIndex()
@@ -143,8 +148,11 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 	}
 
 	e := types.Expression{
-		Predicates: []types.Predicate{
-			types.Predicate{Id: "test"},
+		LogicalExpression: types.LogicalExpression{
+			Connector: types.CONNECTOR_AND,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "test"}},
+			},
 		},
 	}
 	es := []types.Expression{e}

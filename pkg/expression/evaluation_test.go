@@ -17,19 +17,19 @@ func TestEvaluation(t *testing.T) {
 
 	andEx := types.Expression{
 		LogicalExpression: types.LogicalExpression{
-			Connector: CONNECTOR_AND,
-			Predicates: []types.ExpressionPredicate{
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
+			Connector: types.CONNECTOR_AND,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "a"}},
+				types.Operand{Predicate: &types.Predicate{Id: "b"}},
 			},
 		},
 	}
 	orEx := types.Expression{
 		LogicalExpression: types.LogicalExpression{
-			Connector: CONNECTOR_OR,
-			Predicates: []types.ExpressionPredicate{
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
+			Connector: types.CONNECTOR_OR,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "a"}},
+				types.Operand{Predicate: &types.Predicate{Id: "b"}},
 			},
 		},
 	}
@@ -97,14 +97,14 @@ func TestExpressionNesting(t *testing.T) {
 
 	andEx := types.Expression{
 		LogicalExpression: types.LogicalExpression{
-			Connector: CONNECTOR_AND,
-			Predicates: []types.ExpressionPredicate{
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
-				types.ExpressionPredicate{
+			Connector: types.CONNECTOR_AND,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "a"}},
+				types.Operand{
 					LogicalExpression: &types.LogicalExpression{
-						Connector: CONNECTOR_AND,
-						Predicates: []types.ExpressionPredicate{
-							types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
+						Connector: types.CONNECTOR_AND,
+						Operands: []types.Operand{
+							types.Operand{Predicate: &types.Predicate{Id: "b"}},
 						},
 					},
 				},
@@ -113,14 +113,14 @@ func TestExpressionNesting(t *testing.T) {
 	}
 	orEx := types.Expression{
 		LogicalExpression: types.LogicalExpression{
-			Connector: CONNECTOR_OR,
-			Predicates: []types.ExpressionPredicate{
-				types.ExpressionPredicate{Predicate: types.Predicate{Id: "a"}},
-				types.ExpressionPredicate{
+			Connector: types.CONNECTOR_OR,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "a"}},
+				types.Operand{
 					LogicalExpression: &types.LogicalExpression{
-						Connector: CONNECTOR_AND,
-						Predicates: []types.ExpressionPredicate{
-							types.ExpressionPredicate{Predicate: types.Predicate{Id: "b"}},
+						Connector: types.CONNECTOR_AND,
+						Operands: []types.Operand{
+							types.Operand{Predicate: &types.Predicate{Id: "b"}},
 						},
 					},
 				},
