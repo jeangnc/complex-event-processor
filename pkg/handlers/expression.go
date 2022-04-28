@@ -23,5 +23,6 @@ func NewExpressionHandler(index expression.Index) func(w http.ResponseWriter, r 
 		index.Append(ex)
 
 		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]bool{"ok": true})
 	}
 }
