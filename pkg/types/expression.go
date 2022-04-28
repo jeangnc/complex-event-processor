@@ -15,6 +15,7 @@ type LogicalExpression struct {
 }
 
 type Operand struct {
+	Negated           bool
 	Predicate         *Predicate         `json:"predicate,omitempty"`
 	LogicalExpression *LogicalExpression `json:"logical_expression,omitempty"`
 }

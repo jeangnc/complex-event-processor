@@ -24,6 +24,11 @@ func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool 
 		if !ok {
 			value = false
 		}
+
+		if o.Negated {
+			value = !value
+		}
+
 		values = append(values, value)
 	}
 

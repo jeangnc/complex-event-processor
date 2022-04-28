@@ -57,6 +57,27 @@ func TestEvaluation(t *testing.T) {
 			expectedResult: false,
 		},
 		testCase{
+			description: "negated 'AND' expression with truthy result",
+			entity: types.Entity{
+				Predicates: map[string]bool{
+					"a": true,
+				},
+			},
+			expression: types.Expression{
+				LogicalExpression: types.LogicalExpression{
+					Connector: types.CONNECTOR_AND,
+					Operands: []types.Operand{
+						types.Operand{Predicate: &types.Predicate{Id: "a"}},
+						types.Operand{
+							Negated:   true,
+							Predicate: &types.Predicate{Id: "b"},
+						},
+					},
+				},
+			},
+			expectedResult: true,
+		},
+		testCase{
 			description: "'OR' expression with truthy result",
 			entity: types.Entity{
 				Predicates: map[string]bool{
