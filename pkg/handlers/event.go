@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
@@ -15,13 +14,12 @@ var entity = types.Entity{}
 
 func NewEventHandler(index expression.Index) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
+		var e types.Event
+
+		err := json.NewDecoder(r.Body).Decode(&e)
 		if err != nil {
 			fmt.Fprintf(w, "Invalid event")
 		}
-
-		var e types.Event
-		json.Unmarshal(body, &e)
 
 		i := index.SearchImpactedPredicates(e)
 		entity, c := mutation.Process(entity, i)

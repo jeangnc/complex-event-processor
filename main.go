@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,11 +16,7 @@ const (
 
 func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Fprintf(w, "Invalid body")
-		}
-
+		body, _ := ioutil.ReadAll(r.Body)
 		log.Print("Received: ", string(body))
 		next.ServeHTTP(w, r)
 	})

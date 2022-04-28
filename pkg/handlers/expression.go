@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
@@ -12,15 +11,14 @@ import (
 
 func NewExpressionHandler(index expression.Index) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
+		var e types.Expression
+
+		err := json.NewDecoder(r.Body).Decode(&e)
 		if err != nil {
-			fmt.Fprintf(w, "Invalid expression")
+			fmt.Fprintf(w, "Invalid event")
 		}
 
-		var ex types.Expression
-		json.Unmarshal(body, &ex)
-
-		index.Append(ex)
+		index.Append(e)
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]bool{"ok": true})
