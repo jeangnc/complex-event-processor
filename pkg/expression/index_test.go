@@ -22,7 +22,9 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 		TenantId: tenantId,
 		Type:     "MY_TYPE",
 		Payload: map[string]interface{}{
-			"email": "test",
+			"string_field": "my-value",
+			"int_field":    1,
+			"float_field":  1.0,
 		},
 	}
 
@@ -35,9 +37,9 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 				EventType: "MY_TYPE",
 				Conditions: []types.Condition{
 					types.Condition{
-						Field:    "email",
+						Field:    "string_field",
 						Operator: OPERATOR_EQUAL,
-						Value:    "test",
+						Value:    "my-value",
 					},
 				},
 			},
@@ -55,9 +57,9 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 				EventType: "MY_TYPE",
 				Conditions: []types.Condition{
 					types.Condition{
-						Field:    "email",
+						Field:    "string_field",
 						Operator: OPERATOR_EQUAL,
-						Value:    "different-test",
+						Value:    "different-value",
 					},
 				},
 			},
@@ -76,7 +78,7 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 				Immutable: true,
 				Conditions: []types.Condition{
 					types.Condition{
-						Field:    "email",
+						Field:    "string_field",
 						Operator: OPERATOR_EQUAL,
 						Value:    "different-test",
 					},

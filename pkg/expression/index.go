@@ -10,19 +10,21 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-const OPERATOR_EQUAL string = "eq"
-const OPERATOR_DIFFERENT string = "not_eq"
+const OPERATOR_EQUAL string = "equal"
+const OPERATOR_DIFFERENT string = "not_equal"
+const OPERATOR_LESS_THAN string = "less_than"
+const OPERATOR_GREATER_THAN string = "greater_than"
+const OPERATOR_LESS_THAN_OR_EQUAL = "less_than_or_equal"
+const OPERATOR_GREATER_THAN_OR_EQUAL = "greater_than_or_equal"
 
 type Index struct {
-	expressionMap PredicateExpressionMap
+	expressionMap map[string][]types.Expression
 	predicateTree tree.Node
 }
 
-type PredicateExpressionMap map[string][]types.Expression
-
 func NewIndex() Index {
 	return Index{
-		expressionMap: PredicateExpressionMap{},
+		expressionMap: map[string][]types.Expression{},
 		predicateTree: tree.NewNode(),
 	}
 }
@@ -111,13 +113,17 @@ func evaluateConditions(e types.Event, p types.Predicate) bool {
 
 		switch c.Operator {
 		case OPERATOR_EQUAL:
-			if value != expectedValue {
-				return false
-			}
+			return value == expectedValue
 		case OPERATOR_DIFFERENT:
-			if value == expectedValue {
-				return false
-			}
+			return value != expectedValue
+		case OPERATOR_LESS_THAN:
+			// TODO: how to cast?
+		case OPERATOR_GREATER_THAN:
+			// TODO: how to cast?
+		case OPERATOR_LESS_THAN_OR_EQUAL:
+			// TODO: how to cast?
+		case OPERATOR_GREATER_THAN_OR_EQUAL:
+			// TODO: how to cast?
 		default:
 			panic(fmt.Sprintf("invalid operator %s", c.Operator))
 		}
