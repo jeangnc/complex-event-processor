@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,8 +17,10 @@ const (
 
 func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, _ := ioutil.ReadAll(r.Body)
-		log.Print("Received: ", string(body))
+		bodyBytes, _ := ioutil.ReadAll(r.Body)
+		r.Body.Close()
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		log.Print("Received: ", string(bodyBytes))
 		next.ServeHTTP(w, r)
 	})
 }
