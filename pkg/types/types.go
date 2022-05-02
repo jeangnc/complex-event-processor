@@ -1,10 +1,11 @@
 package types
 
 type Event struct {
-	Id       string                 `json:"id"`
-	TenantId string                 `json:"tenant_id"`
-	Type     string                 `json:"type"`
-	Payload  map[string]interface{} `json:"payload"`
+	Id        string                 `json:"id"`
+	TenantId  string                 `json:"tenant_id"`
+	Type      string                 `json:"type"`
+	Timestamp int64                  `json:"timestamp"`
+	Payload   map[string]interface{} `json:"payload"`
 }
 
 type Entity struct {
