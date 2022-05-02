@@ -21,7 +21,8 @@ func NewEventHandler(index expression.Index) func(w http.ResponseWriter, r *http
 			fmt.Fprintf(w, "Invalid event")
 		}
 
-		response := event.Process(index, entity, e)
+		newEntity, response := event.Process(index, entity, e)
+		entity = newEntity
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
