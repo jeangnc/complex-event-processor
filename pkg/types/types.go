@@ -20,3 +20,12 @@ type Impact struct {
 type Changes struct {
 	Predicates map[string]bool
 }
+
+type Notification struct {
+	Id           string `json:"id"`
+	TenantId     string `json:"tenant_id"`
+	EntityId     string `json:"entity_id"`
+	ExpressionId string `json:"expression_id"`
+	Timestamp    int64  `json:"timestamp"`
+	State        bool   `json:"state"`
+}
