@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/jeangnc/complex-event-processor/pkg/event"
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
-	"github.com/jeangnc/complex-event-processor/pkg/mutation"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
@@ -21,14 +21,7 @@ func NewEventHandler(index expression.Index) func(w http.ResponseWriter, r *http
 			fmt.Fprintf(w, "Invalid event")
 		}
 
-		i := index.SearchImpactedPredicates(e)
-		entity, c := mutation.Process(entity, i)
-		exps := index.FilterImpactedExpressions(c)
-
-		response := map[string]bool{}
-		for _, ex := range exps {
-			response[ex.Id] = expression.EvaluateExpression(entity, ex)
-		}
+		response := event.Process(index, entity, e)
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
