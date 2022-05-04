@@ -21,3 +21,12 @@ type GenericValue interface {
 	ToFloat() float64
 	ToString() string
 }
+
+type Ordered interface {
+	LessThan(GenericValue) bool
+	LessThanEqual(GenericValue) bool
+	GreaterThan(GenericValue) bool
+	GreaterThanEqual(GenericValue) bool
+	Equal(GenericValue) bool
+	Different(GenericValue) bool
+}

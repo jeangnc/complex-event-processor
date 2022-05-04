@@ -32,3 +32,27 @@ func (v StringValue) ToFloat() float64 {
 func (v StringValue) ToString() string {
 	return v.value
 }
+
+func (v StringValue) LessThan(v2 GenericValue) bool {
+	return v.value < v2.ToString()
+}
+
+func (v StringValue) LessThanEqual(v2 GenericValue) bool {
+	return v.value <= v2.ToString()
+}
+
+func (v StringValue) GreaterThan(v2 GenericValue) bool {
+	return v.value > v2.ToString()
+}
+
+func (v StringValue) GreaterThanEqual(v2 GenericValue) bool {
+	return v.value >= v2.ToString()
+}
+
+func (v StringValue) Equal(v2 GenericValue) bool {
+	return v.value == v2.ToString()
+}
+
+func (v StringValue) Different(v2 GenericValue) bool {
+	return v.value != v2.ToString()
+}
