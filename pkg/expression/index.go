@@ -6,6 +6,7 @@ import (
 
 	"github.com/jeangnc/complex-event-processor/pkg/tree"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
+	"github.com/jeangnc/complex-event-processor/pkg/types/value"
 
 	"golang.org/x/exp/maps"
 )
@@ -104,26 +105,28 @@ func extractPredicateKeys(p *types.Predicate) []string {
 
 func evaluateConditions(e types.Event, p types.Predicate) bool {
 	for _, c := range p.Conditions {
-		value, ok := e.Payload[c.Field]
-		expectedValue := c.Value
+		payloadValue, ok := e.Payload[c.Field]
 
 		if !ok {
 			return false
 		}
 
+		genericValue := value.NewValue(payloadValue)
+		expectedValue := value.NewValue(c.Value)
+
 		switch c.Operator {
 		case OPERATOR_EQUAL:
-			return value == expectedValue
+			return genericValue.Equal(expectedValue)
 		case OPERATOR_DIFFERENT:
-			return value != expectedValue
+			return genericValue.Different(expectedValue)
 		case OPERATOR_LESS_THAN:
-			// TODO: how to cast?
+			return genericValue.LessThan(expectedValue)
 		case OPERATOR_GREATER_THAN:
-			// TODO: how to cast?
+			return genericValue.GreaterThan(expectedValue)
 		case OPERATOR_LESS_THAN_OR_EQUAL:
-			// TODO: how to cast?
+			return genericValue.LessThanEqual(expectedValue)
 		case OPERATOR_GREATER_THAN_OR_EQUAL:
-			// TODO: how to cast?
+			return genericValue.GreaterThanEqual(expectedValue)
 		default:
 			panic(fmt.Sprintf("invalid operator %s", c.Operator))
 		}
