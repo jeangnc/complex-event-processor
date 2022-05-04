@@ -20,9 +20,6 @@ type GenericValue interface {
 	ToInt() int64
 	ToFloat() float64
 	ToString() string
-}
-
-type Ordered interface {
 	LessThan(GenericValue) bool
 	LessThanEqual(GenericValue) bool
 	GreaterThan(GenericValue) bool
