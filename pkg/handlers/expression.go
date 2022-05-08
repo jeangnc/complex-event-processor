@@ -9,7 +9,7 @@ import (
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
-func NewExpressionHandler(index expression.Index) func(w http.ResponseWriter, r *http.Request) {
+func NewExpressionHandler(index *expression.Index) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var e types.Expression
 

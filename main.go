@@ -37,8 +37,8 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(loggingMiddleware)
 	router.Use(jsonMiddleware)
-	router.HandleFunc("/event", handlers.NewEventHandler(index)).Methods("POST")
-	router.HandleFunc("/expression", handlers.NewExpressionHandler(index)).Methods("POST")
+	router.HandleFunc("/event", handlers.NewEventHandler(&index)).Methods("POST")
+	router.HandleFunc("/expression", handlers.NewExpressionHandler(&index)).Methods("POST")
 
 	log.Print("Listening to ", port)
 	log.Fatal(http.ListenAndServe(port, router))

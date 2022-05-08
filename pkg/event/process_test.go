@@ -59,7 +59,7 @@ func TestEventProcessing(t *testing.T) {
 			index.Append(ex)
 
 			entity := types.Entity{}
-			_, result := Process(index, entity, s.event)
+			_, result := Process(&index, entity, s.event)
 
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed to search impacted expressions: %v %v`, result, s.expectedResult)

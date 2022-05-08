@@ -12,7 +12,7 @@ import (
 
 var entity = types.Entity{}
 
-func NewEventHandler(index expression.Index) func(w http.ResponseWriter, r *http.Request) {
+func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var e types.Event
 
