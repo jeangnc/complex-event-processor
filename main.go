@@ -18,7 +18,6 @@ const (
 func loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		bodyBytes, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close()
 		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 		log.Print("Received: ", string(bodyBytes))
 		next.ServeHTTP(w, r)
