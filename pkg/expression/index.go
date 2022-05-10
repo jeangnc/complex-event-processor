@@ -19,14 +19,14 @@ const OPERATOR_LESS_THAN_OR_EQUAL = "less_than_or_equal"
 const OPERATOR_GREATER_THAN_OR_EQUAL = "greater_than_or_equal"
 
 type Index struct {
-	expressionMap map[string][]types.Expression
-	predicateTree tree.Node
+	predicateExpressionMap map[string][]*types.Expression
+	predicateTree          tree.Node
 }
 
 func NewIndex() Index {
 	return Index{
-		expressionMap: map[string][]types.Expression{},
-		predicateTree: tree.NewNode(),
+		predicateExpressionMap: map[string][]*types.Expression{},
+		predicateTree:          tree.NewNode(),
 	}
 }
 
@@ -53,13 +53,15 @@ func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
 	r := make([]types.Expression, 0, 0)
 
 	for p, _ := range c.Predicates {
-		es, ok := i.expressionMap[p]
+		es, ok := i.predicateExpressionMap[p]
 
 		if !ok {
 			continue
 		}
 
-		r = append(r, es...)
+		for _, e := range es {
+			r = append(r, *e)
+		}
 	}
 
 	return r
@@ -72,10 +74,10 @@ func (i *Index) Append(e types.Expression) {
 		n := i.predicateTree.Traverse(keys)
 		n.Set(p.Id, *p)
 
-		if _, ok := i.expressionMap[p.Id]; !ok {
-			i.expressionMap[p.Id] = make([]types.Expression, 0)
+		if _, ok := i.predicateExpressionMap[p.Id]; !ok {
+			i.predicateExpressionMap[p.Id] = make([]*types.Expression, 0)
 		}
-		i.expressionMap[p.Id] = append(i.expressionMap[p.Id], e)
+		i.predicateExpressionMap[p.Id] = append(i.predicateExpressionMap[p.Id], &e)
 	}
 }
 
