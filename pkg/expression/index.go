@@ -3,6 +3,7 @@ package expression
 import (
 	"fmt"
 	"sort"
+	"sync"
 
 	"github.com/jeangnc/complex-event-processor/pkg/tree"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
@@ -19,14 +20,17 @@ const OPERATOR_LESS_THAN_OR_EQUAL = "less_than_or_equal"
 const OPERATOR_GREATER_THAN_OR_EQUAL = "greater_than_or_equal"
 
 type Index struct {
-	predicateExpressionMap map[string][]*types.Expression
-	predicateTree          tree.Node
+	mutex                sync.Mutex
+	expressions          map[string]*types.Expression
+	predicateExpressions map[string][]*types.Expression
+	predicateTree        tree.Node
 }
 
 func NewIndex() Index {
 	return Index{
-		predicateExpressionMap: map[string][]*types.Expression{},
-		predicateTree:          tree.NewNode(),
+		expressions:          map[string]*types.Expression{},
+		predicateExpressions: map[string][]*types.Expression{},
+		predicateTree:        tree.NewNode(),
 	}
 }
 
@@ -53,7 +57,7 @@ func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
 	r := make([]types.Expression, 0, 0)
 
 	for p, _ := range c.Predicates {
-		es, ok := i.predicateExpressionMap[p]
+		es, ok := i.predicateExpressions[p]
 
 		if !ok {
 			continue
@@ -68,17 +72,32 @@ func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
 }
 
 func (i *Index) Append(e types.Expression) {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+
+	i.expressions[e.Id] = &e
+
 	for _, p := range e.LogicalExpression.Predicates() {
 		keys := append([]string{e.TenantId}, extractPredicateKeys(p)...)
 
 		n := i.predicateTree.Traverse(keys)
 		n.Set(p.Id, *p)
 
-		if _, ok := i.predicateExpressionMap[p.Id]; !ok {
-			i.predicateExpressionMap[p.Id] = make([]*types.Expression, 0)
+		if _, ok := i.predicateExpressions[p.Id]; !ok {
+			i.predicateExpressions[p.Id] = make([]*types.Expression, 0)
 		}
-		i.predicateExpressionMap[p.Id] = append(i.predicateExpressionMap[p.Id], &e)
+		i.predicateExpressions[p.Id] = append(i.predicateExpressions[p.Id], &e)
 	}
+}
+
+func (i Index) Expressions() []types.Expression {
+	r := make([]types.Expression, 0)
+
+	for _, e := range i.expressions {
+		r = append(r, *e)
+	}
+
+	return r
 }
 
 func extractPayloadKeys(e types.Event) []string {

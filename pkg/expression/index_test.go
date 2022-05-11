@@ -197,3 +197,25 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 		})
 	}
 }
+
+func TestExpressions(t *testing.T) {
+	e := types.Expression{
+		Id: "A",
+		LogicalExpression: types.LogicalExpression{
+			Connector: types.CONNECTOR_AND,
+			Operands: []types.Operand{
+				types.Operand{Predicate: &types.Predicate{Id: "test"}},
+			},
+		},
+	}
+
+	i := NewIndex()
+	i.Append(e)
+
+	result := i.Expressions()
+	expected := []types.Expression{e}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Fatalf(`Failed to export list of expressions: %v %v`, result, expected)
+	}
+}
