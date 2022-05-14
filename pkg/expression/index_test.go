@@ -128,7 +128,7 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 				},
 			}
 
-			i := NewIndex()
+			i := NewTemporaryIndex()
 			i.Append(ex)
 
 			result := i.SearchImpactedPredicates(s.event)
@@ -184,7 +184,7 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			i := NewIndex()
+			i := NewTemporaryIndex()
 
 			for _, ex := range s.expressions {
 				i.Append(ex)
@@ -195,27 +195,5 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 				t.Fatalf(`Failed: %s %v %v`, s.description, result, s.expectedResult)
 			}
 		})
-	}
-}
-
-func TestExpressions(t *testing.T) {
-	e := types.Expression{
-		Id: "A",
-		LogicalExpression: types.LogicalExpression{
-			Connector: types.CONNECTOR_AND,
-			Operands: []types.Operand{
-				types.Operand{Predicate: &types.Predicate{Id: "test"}},
-			},
-		},
-	}
-
-	i := NewIndex()
-	i.Append(e)
-
-	result := i.Expressions()
-	expected := []types.Expression{e}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Fatalf(`Failed to export list of expressions: %v %v`, result, expected)
 	}
 }

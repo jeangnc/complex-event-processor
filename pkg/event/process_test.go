@@ -55,7 +55,7 @@ func TestEventProcessing(t *testing.T) {
 				},
 			}
 
-			index := expression.NewIndex()
+			index := expression.NewTemporaryIndex()
 			index.Append(ex)
 
 			entity := types.Entity{}

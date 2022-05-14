@@ -1,7 +1,9 @@
 package expression
 
 import (
+	"encoding/gob"
 	"fmt"
+	"os"
 	"sort"
 	"sync"
 
@@ -20,18 +22,52 @@ const OPERATOR_LESS_THAN_OR_EQUAL = "less_than_or_equal"
 const OPERATOR_GREATER_THAN_OR_EQUAL = "greater_than_or_equal"
 
 type Index struct {
-	mutex                sync.Mutex
+	filename             string
 	expressions          map[string]*types.Expression
 	predicateExpressions map[string][]*types.Expression
 	predicateTree        tree.Node
+	mutex                sync.Mutex
 }
 
-func NewIndex() Index {
+func NewIndex(filename string) Index {
 	return Index{
+		filename:             filename,
 		expressions:          map[string]*types.Expression{},
 		predicateExpressions: map[string][]*types.Expression{},
 		predicateTree:        tree.NewNode(),
 	}
+}
+
+func NewTemporaryIndex() Index {
+	return NewIndex("")
+}
+
+func (i *Index) Load() {
+	f, err := os.Open(i.filename)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var es []types.Expression
+
+	d := gob.NewDecoder(f)
+	err = d.Decode(&es)
+	if err != nil {
+		fmt.Println("Decode error:", err)
+	}
+
+	for _, e := range es {
+		i.Append(e)
+	}
+}
+
+func (i Index) Save() {
+	e := i.Expressions()
+	f, _ := os.Create(i.filename)
+	c := gob.NewEncoder(f)
+	c.Encode(e)
 }
 
 func (i Index) SearchImpactedPredicates(e types.Event) types.Impact {
