@@ -23,7 +23,9 @@ func NewExpressionHandler(index *expression.Index) func(w http.ResponseWriter, r
 
 		err := json.NewDecoder(r.Body).Decode(&e)
 		if err != nil {
-			fmt.Fprintf(w, "Invalid event")
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Invalid expression: ", err)
+			return
 		}
 
 		index.Append(e)

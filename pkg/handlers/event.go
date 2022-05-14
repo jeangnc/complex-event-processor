@@ -18,7 +18,9 @@ func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *htt
 
 		err := json.NewDecoder(r.Body).Decode(&e)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "Invalid event: ", err)
+			return
 		}
 
 		entity, ok := entities[e.EntityId]
