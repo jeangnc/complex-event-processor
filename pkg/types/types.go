@@ -1,5 +1,8 @@
 package types
 
+const CONNECTOR_AND string = "and"
+const CONNECTOR_OR string = "or"
+
 type Event struct {
 	Id        string                 `json:"id"`
 	TenantId  string                 `json:"tenant_id"`
@@ -28,4 +31,29 @@ type Notification struct {
 	ExpressionId string `json:"expression_id"`
 	Timestamp    int64  `json:"timestamp"`
 	State        bool   `json:"state"`
+}
+
+type Expression struct {
+	Id                string            `json:"id"`
+	TenantId          string            `json:"tenant_id"`
+	LogicalExpression LogicalExpression `json:"logical_expression"`
+}
+
+type Operand struct {
+	Negated           bool
+	Predicate         *Predicate         `json:"predicate,omitempty"`
+	LogicalExpression *LogicalExpression `json:"logical_expression,omitempty"`
+}
+
+type Predicate struct {
+	Id         string      `json:"id"`
+	EventType  string      `json:"event_type"`
+	Conditions []Condition `json:"conditions"`
+	Immutable  bool        `json:"immutable"`
+}
+
+type Condition struct {
+	Field    string      `json:"field"`
+	Operator string      `json:"operator"`
+	Value    interface{} `json:"value"`
 }
