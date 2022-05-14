@@ -9,15 +9,15 @@ curl -X POST localhost:8080/expression \
 
 curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
-    -d '{"id":"1","tenant_id":"1","type":"EMAIL_OPENED","payload":{"email":"a","provider":"gmail", "age":17}}'
+    -d '{"id":"1","tenant_id":"1","entity_id":"1","type":"EMAIL_OPENED","payload":{"email":"a","provider":"gmail", "age":17}}'
 
 curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
-    -d '{"id":"2","tenant_id":"1","type":"EMAIL_OPENED","payload":{"email":"b"}}'
+    -d '{"id":"2","tenant_id":"1","entity_id":"1","type":"EMAIL_OPENED","payload":{"email":"b"}}'
 
 curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
-    -d '{"id":"3","tenant_id":"1","type":"EMAIL_CLICKED","payload":{"link":"http://google.com"}}'
+    -d '{"id":"3","tenant_id":"1","entity_id":"1","type":"EMAIL_CLICKED","payload":{"link":"http://google.com"}}'
 ```
 
 

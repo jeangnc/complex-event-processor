@@ -10,7 +10,7 @@ import (
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
-var entity = types.Entity{}
+var entities = map[string]types.Entity{}
 
 func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -18,11 +18,16 @@ func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *htt
 
 		err := json.NewDecoder(r.Body).Decode(&e)
 		if err != nil {
-			fmt.Fprintf(w, "Invalid event")
+			fmt.Fprintf(w, "Invalid event: ", err)
+		}
+
+		entity, ok := entities[e.EntityId]
+		if !ok {
+			entity = types.Entity{}
 		}
 
 		newEntity, response := event.Process(index, entity, e)
-		entity = newEntity
+		entities[e.EntityId] = newEntity
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
