@@ -32,7 +32,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	index := expression.NewIndex("./expressions")
+	index := expression.NewIndex("./tmp/expressions")
 	index.Load()
 
 	router := mux.NewRouter().StrictSlash(true)
