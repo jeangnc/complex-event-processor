@@ -1,5 +1,5 @@
 #!lua name=mylib
-local function load_sequence(keys, args)
+local function zsequence(keys, args)
    local lower_bound, upper_bound = unpack(args)
    local values = {}
 
@@ -22,4 +22,4 @@ local function load_sequence(keys, args)
    return values
 end
 
-redis.register_function('load_sequence', load_sequence)
+redis.register_function('zsequence', zsequence)
