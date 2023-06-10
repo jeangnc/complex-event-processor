@@ -18,13 +18,6 @@ type Impact struct {
 	Predicates map[string]bool
 }
 
-type Notification struct {
-	Id           string `json:"id"`
-	ExpressionId string `json:"expression_id"`
-	Timestamp    int64  `json:"timestamp"`
-	State        bool   `json:"state"`
-}
-
 type Expression struct {
 	Id                string            `json:"id"`
 	LogicalExpression LogicalExpression `json:"logical_expression"`
