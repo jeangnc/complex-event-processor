@@ -1,4 +1,4 @@
-#!lua name=mylib
+#!lua name=lib
 local function zsequence(keys, args)
    local lower_bound, upper_bound = unpack(args)
    local values = {}
