@@ -10,7 +10,7 @@ import (
 func TestEvaluation(t *testing.T) {
 	type testCase struct {
 		description    string
-		entity         types.Entity
+		state          types.State
 		expression     types.Expression
 		expectedResult bool
 	}
@@ -37,7 +37,7 @@ func TestEvaluation(t *testing.T) {
 	testCases := []testCase{
 		testCase{
 			description: "'AND' expression with truthy result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 					"b": true,
@@ -48,7 +48,7 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'AND' expression with falsey result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 				},
@@ -58,7 +58,7 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "negated 'AND' expression with truthy result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 				},
@@ -79,7 +79,7 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with truthy result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 					"b": false,
@@ -90,7 +90,7 @@ func TestEvaluation(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with falsey result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{},
 			},
 			expression:     orEx,
@@ -100,7 +100,7 @@ func TestEvaluation(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := EvaluateExpression(s.entity, s.expression)
+			result := EvaluateExpression(s.state, &s.expression)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s`, s.description)
 			}
@@ -111,7 +111,7 @@ func TestEvaluation(t *testing.T) {
 func TestExpressionNesting(t *testing.T) {
 	type testCase struct {
 		description    string
-		entity         types.Entity
+		state          types.State
 		expression     types.Expression
 		expectedResult bool
 	}
@@ -152,7 +152,7 @@ func TestExpressionNesting(t *testing.T) {
 	testCases := []testCase{
 		testCase{
 			description: "'AND' expression with truthy result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 					"b": true,
@@ -163,7 +163,7 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'AND' expression with falsey result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 				},
@@ -173,7 +173,7 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with truthy result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{
 					"a": true,
 					"b": false,
@@ -184,7 +184,7 @@ func TestExpressionNesting(t *testing.T) {
 		},
 		testCase{
 			description: "'OR' expression with falsey result",
-			entity: types.Entity{
+			state: types.State{
 				Predicates: map[string]bool{},
 			},
 			expression:     orEx,
@@ -194,7 +194,7 @@ func TestExpressionNesting(t *testing.T) {
 
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
-			result := EvaluateExpression(s.entity, s.expression)
+			result := EvaluateExpression(s.state, &s.expression)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s`, s.description)
 			}
