@@ -80,8 +80,7 @@ func (i Index) SearchImpactedPredicates(e types.Event) types.Impact {
 		p := v.(types.Predicate)
 		r := evaluateConditions(e, p)
 
-		// immutable false results are irrelevant
-		if !p.Immutable || r {
+		if r {
 			result[p.Id] = r
 		}
 	}

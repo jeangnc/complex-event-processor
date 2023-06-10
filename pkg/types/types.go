@@ -41,7 +41,6 @@ type Predicate struct {
 	Id         string      `json:"id"`
 	EventType  string      `json:"event_type"`
 	Conditions []Condition `json:"conditions"`
-	Immutable  bool        `json:"immutable"`
 }
 
 type Condition struct {

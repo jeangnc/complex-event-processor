@@ -72,7 +72,6 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 			predicate: types.Predicate{
 				Id:        "my-predicate",
 				EventType: "MY_TYPE",
-				Immutable: true,
 				Conditions: []types.Condition{
 					types.Condition{
 						Field:    "string_field",
