@@ -114,7 +114,7 @@ func (i *Index) Append(e types.Expression) {
 	i.expressions[e.Id] = &e
 
 	for _, p := range e.LogicalExpression.Predicates() {
-		keys := append([]string{e.TenantId}, extractPredicateKeys(p)...)
+		keys := extractPredicateKeys(p)
 
 		n := i.predicateTree.Traverse(keys)
 		n.Set(p.Id, *p)
@@ -140,7 +140,7 @@ func extractPayloadKeys(e types.Event) []string {
 	fields := maps.Keys(e.Payload)
 	sort.Strings(fields)
 
-	keys := append([]string{e.TenantId, e.Type}, fields...)
+	keys := append([]string{e.Type}, fields...)
 
 	return keys
 }

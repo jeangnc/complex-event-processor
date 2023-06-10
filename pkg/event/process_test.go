@@ -18,8 +18,6 @@ func TestEventProcessing(t *testing.T) {
 		expectedResult map[string]bool
 	}
 
-	tenantId := "1"
-
 	p := types.Predicate{
 		Id:         "my-predicate",
 		EventType:  "MY_TYPE",
@@ -27,9 +25,8 @@ func TestEventProcessing(t *testing.T) {
 	}
 
 	e := types.Event{
-		TenantId: tenantId,
-		Type:     "MY_TYPE",
-		Payload:  map[string]interface{}{},
+		Type:    "MY_TYPE",
+		Payload: map[string]interface{}{},
 	}
 
 	testCases := []testCase{
@@ -46,8 +43,7 @@ func TestEventProcessing(t *testing.T) {
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
 			ex := types.Expression{
-				Id:       "1",
-				TenantId: tenantId,
+				Id: "1",
 				LogicalExpression: types.LogicalExpression{
 					Connector: types.CONNECTOR_AND,
 					Operands: []types.Operand{

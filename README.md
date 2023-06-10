@@ -7,7 +7,6 @@ curl -X POST localhost:8080/expression \
     -H 'Content-Type: application/json ' \
     -d '{
 	  "id": "complex-event-1",
-	  "tenant_id": "1",
 	  "logical_expression": {
 		"connector": "and",
 		"operands": [
@@ -52,8 +51,6 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "1",
-      "tenant_id": "1",
-      "entity_id": "1",
       "timestamp": 1,
       "type": "EMAIL_OPENED",
       "payload": {
@@ -65,8 +62,6 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "1",
-      "tenant_id": "1",
-      "entity_id": "1",
       "timestamp": 1,
       "type": "EMAIL_OPENED",
       "payload": {
@@ -79,8 +74,6 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "2",
-      "tenant_id": "1",
-      "entity_id": "1",
       "timestamp": 1,
       "type": "EMAIL_CLICKED",
       "payload": {

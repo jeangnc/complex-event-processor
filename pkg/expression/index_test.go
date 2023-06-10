@@ -16,11 +16,8 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 		expectedResult types.Impact
 	}
 
-	tenantId := "1"
-
 	event := types.Event{
-		TenantId: tenantId,
-		Type:     "MY_TYPE",
+		Type: "MY_TYPE",
 		Payload: map[string]interface{}{
 			"string_field": "my-value",
 			"int_field":    1,
@@ -119,7 +116,6 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 	for _, s := range testCases {
 		t.Run(s.description, func(t *testing.T) {
 			ex := types.Expression{
-				TenantId: tenantId,
 				LogicalExpression: types.LogicalExpression{
 					Connector: types.CONNECTOR_AND,
 					Operands: []types.Operand{
