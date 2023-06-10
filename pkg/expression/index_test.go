@@ -144,9 +144,9 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 func TestImpactedExpressionsFilter(t *testing.T) {
 	type testCase struct {
 		description    string
-		changes        types.Changes
+		impact         types.Impact
 		expressions    []types.Expression
-		expectedResult []types.Expression
+		expectedResult []*types.Expression
 	}
 
 	e := types.Expression{
@@ -157,28 +157,29 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 			},
 		},
 	}
+
 	es := []types.Expression{e}
 
 	testCases := []testCase{
 		testCase{
 			description: "when the expression was impacted",
-			changes: types.Changes{
+			impact: types.Impact{
 				Predicates: map[string]bool{
 					"test": false,
 				},
 			},
 			expressions:    es,
-			expectedResult: []types.Expression{e},
+			expectedResult: []*types.Expression{&e},
 		},
 		testCase{
 			description: "when the expression was not impacted",
-			changes: types.Changes{
+			impact: types.Impact{
 				Predicates: map[string]bool{
 					"test2": false,
 				},
 			},
 			expressions:    es,
-			expectedResult: []types.Expression{},
+			expectedResult: []*types.Expression{},
 		},
 	}
 
@@ -190,7 +191,7 @@ func TestImpactedExpressionsFilter(t *testing.T) {
 				i.Append(ex)
 			}
 
-			result := i.FilterImpactedExpressions(s.changes)
+			result := i.FilterImpactedExpressions(s.impact)
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed: %s %v %v`, s.description, result, s.expectedResult)
 			}

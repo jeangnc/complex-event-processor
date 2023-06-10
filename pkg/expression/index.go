@@ -89,10 +89,10 @@ func (i Index) SearchImpactedPredicates(e types.Event) types.Impact {
 	return types.Impact{Predicates: result}
 }
 
-func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
-	r := make([]types.Expression, 0, 0)
+func (i Index) FilterImpactedExpressions(impact types.Impact) []*types.Expression {
+	r := make([]*types.Expression, 0, 0)
 
-	for p, _ := range c.Predicates {
+	for p, _ := range impact.Predicates {
 		es, ok := i.predicateExpressions[p]
 
 		if !ok {
@@ -100,7 +100,7 @@ func (i Index) FilterImpactedExpressions(c types.Changes) []types.Expression {
 		}
 
 		for _, e := range es {
-			r = append(r, *e)
+			r = append(r, e)
 		}
 	}
 
