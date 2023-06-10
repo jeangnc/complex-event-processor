@@ -16,15 +16,7 @@ type State struct {
 	Predicates map[string]bool
 }
 
-type Entity struct {
-	Predicates map[string]bool
-}
-
 type Impact struct {
-	Predicates map[string]bool
-}
-
-type Changes struct {
 	Predicates map[string]bool
 }
 
