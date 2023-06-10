@@ -41,6 +41,7 @@ type Expression struct {
 	Id                string            `json:"id"`
 	TenantId          string            `json:"tenant_id"`
 	LogicalExpression LogicalExpression `json:"logical_expression"`
+	Window            int64             `json:"window"`
 }
 
 type Operand struct {
