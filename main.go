@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
@@ -12,7 +13,7 @@ import (
 )
 
 const (
-	port = ":8080"
+	address = "127.0.0.1:8080"
 )
 
 func jsonMiddleware(next http.Handler) http.Handler {
@@ -41,6 +42,13 @@ func main() {
 	router.HandleFunc("/event", handlers.NewEventHandler(&index)).Methods("POST")
 	router.HandleFunc("/expression", handlers.NewExpressionHandler(&index)).Methods("POST")
 
-	log.Print("Listening to ", port)
-	log.Fatal(http.ListenAndServe(port, router))
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         address,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	log.Print("Listening to ", address)
+	log.Fatal(srv.ListenAndServe())
 }
