@@ -12,6 +12,10 @@ type Event struct {
 	Payload   map[string]interface{} `json:"payload"`
 }
 
+type State struct {
+	Predicates map[string]bool
+}
+
 type Entity struct {
 	Predicates map[string]bool
 }
