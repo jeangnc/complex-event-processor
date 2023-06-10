@@ -7,12 +7,11 @@ import (
 
 	"github.com/jeangnc/complex-event-processor/pkg/event"
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
+	"github.com/jeangnc/complex-event-processor/pkg/state"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
-var entities = map[string]types.Entity{}
-
-func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *http.Request) {
+func NewEventHandler(index *expression.Index, repository state.Repository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var e types.Event
 
@@ -23,14 +22,7 @@ func NewEventHandler(index *expression.Index) func(w http.ResponseWriter, r *htt
 			return
 		}
 
-		entity, ok := entities[e.EntityId]
-		if !ok {
-			entity = types.Entity{}
-		}
-
-		newEntity, response := event.Process(index, entity, e)
-		entities[e.EntityId] = newEntity
-
+		response := event.Process(index, repository, e)
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
 	}

@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
 	"github.com/jeangnc/complex-event-processor/pkg/handlers"
+	"github.com/jeangnc/complex-event-processor/pkg/state"
 )
 
 const (
@@ -36,10 +37,12 @@ func main() {
 	index := expression.NewIndex("./tmp/expressions")
 	index.Load()
 
+	repository := state.NewRedisRepository("localhost:6379", "")
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(jsonMiddleware)
 	router.Use(loggingMiddleware)
-	router.HandleFunc("/event", handlers.NewEventHandler(&index)).Methods("POST")
+	router.HandleFunc("/event", handlers.NewEventHandler(&index, &repository)).Methods("POST")
 	router.HandleFunc("/expression", handlers.NewExpressionHandler(&index)).Methods("POST")
 
 	srv := &http.Server{

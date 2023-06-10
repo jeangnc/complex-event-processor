@@ -1,19 +1,26 @@
 package event
 
 import (
+	"context"
+
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
-	"github.com/jeangnc/complex-event-processor/pkg/mutation"
+	"github.com/jeangnc/complex-event-processor/pkg/state"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
-func Process(index *expression.Index, entity types.Entity, event types.Event) (types.Entity, map[string]bool) {
-	impacts := index.SearchImpactedPredicates(event)
-	newEntity, changes := mutation.Process(entity, impacts)
-	exps := index.FilterImpactedExpressions(changes)
+func Process(index *expression.Index, repository state.Repository, event types.Event) map[string]bool {
+	ctx := context.Background()
+
+	impact := index.SearchImpactedPredicates(event)
+	repository.Save(ctx, event, impact)
+
+	expressions := index.FilterImpactedExpressions(impact)
+	states, _ := repository.Load(ctx, event, expressions)
 
 	response := map[string]bool{}
-	for _, ex := range exps {
-		response[ex.Id] = expression.EvaluateExpression(newEntity, ex)
+	for e, v := range states {
+		response[e.Id] = expression.EvaluateExpression(v, e)
 	}
-	return newEntity, response
+
+	return response
 }
