@@ -7,11 +7,11 @@ import (
 	util "github.com/jeangnc/complex-event-processor/pkg/util"
 )
 
-func EvaluateExpression(e types.Entity, ex types.Expression) bool {
+func EvaluateExpression(e types.State, ex *types.Expression) bool {
 	return evaluateLogicalExpression(e, &ex.LogicalExpression)
 }
 
-func evaluateLogicalExpression(e types.Entity, l *types.LogicalExpression) bool {
+func evaluateLogicalExpression(e types.State, l *types.LogicalExpression) bool {
 	values := make([]bool, 0, 0)
 
 	for _, o := range l.Operands {

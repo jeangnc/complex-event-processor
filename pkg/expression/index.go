@@ -161,6 +161,8 @@ func extractPredicateKeys(p *types.Predicate) []string {
 }
 
 func evaluateConditions(e types.Event, p types.Predicate) bool {
+	result := true
+
 	for _, c := range p.Conditions {
 		payloadValue, ok := e.Payload[c.Field]
 
@@ -173,21 +175,21 @@ func evaluateConditions(e types.Event, p types.Predicate) bool {
 
 		switch c.Operator {
 		case OPERATOR_EQUAL:
-			return genericValue.Equal(expectedValue)
+			result = result && genericValue.Equal(expectedValue)
 		case OPERATOR_DIFFERENT:
-			return genericValue.Different(expectedValue)
+			result = result && genericValue.Different(expectedValue)
 		case OPERATOR_LESS_THAN:
-			return genericValue.LessThan(expectedValue)
+			result = result && genericValue.LessThan(expectedValue)
 		case OPERATOR_GREATER_THAN:
-			return genericValue.GreaterThan(expectedValue)
+			result = result && genericValue.GreaterThan(expectedValue)
 		case OPERATOR_LESS_THAN_OR_EQUAL:
-			return genericValue.LessThanEqual(expectedValue)
+			result = result && genericValue.LessThanEqual(expectedValue)
 		case OPERATOR_GREATER_THAN_OR_EQUAL:
-			return genericValue.GreaterThanEqual(expectedValue)
+			result = result && genericValue.GreaterThanEqual(expectedValue)
 		default:
 			panic(fmt.Sprintf("invalid operator %s", c.Operator))
 		}
 	}
 
-	return true
+	return result
 }
