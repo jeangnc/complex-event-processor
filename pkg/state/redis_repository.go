@@ -58,9 +58,10 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 				}
 
 				opts := &redis.ZRangeBy{
-					Min:   min,
-					Max:   max,
-					Count: 1,
+					Min:    min,
+					Max:    max,
+					Offset: 0,
+					Count:  1,
 				}
 
 				promises[e][k] = pipe.ZRangeByScoreWithScores(ctx, k, opts)
