@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/jeangnc/complex-event-processor/pkg/expression"
+	"github.com/jeangnc/complex-event-processor/pkg/state"
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 )
 
@@ -58,8 +59,9 @@ func TestEventProcessing(t *testing.T) {
 			index := expression.NewTemporaryIndex()
 			index.Append(ex)
 
-			entity := types.Entity{}
-			_, result := Process(&index, entity, s.event)
+			repository := state.NewRedisRepository("localhost:6379", "")
+
+			result := Process(&index, &repository, s.event)
 
 			if !reflect.DeepEqual(result, s.expectedResult) {
 				t.Fatalf(`Failed to search impacted expressions: %v %v`, result, s.expectedResult)
