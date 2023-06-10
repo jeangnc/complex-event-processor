@@ -74,7 +74,7 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "2",
-      "timestamp": 1,
+      "timestamp": 2,
       "type": "EMAIL_CLICKED",
       "payload": {
         "link": "http://google.com"
