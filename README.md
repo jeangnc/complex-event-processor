@@ -54,9 +54,24 @@ curl -X POST localhost:8080/event \
       "id": "1",
       "tenant_id": "1",
       "entity_id": "1",
-      "type": "abriu_email",
+      "timestamp": 1,
+      "type": "EMAIL_OPENED",
       "payload": {
-        "email": "john@example.org",
+        "email": "john@example.org"
+      }
+    }'
+
+curl -X POST localhost:8080/event \
+    -H 'Content-Type: application/json ' \
+    -d '{
+      "id": "1",
+      "tenant_id": "1",
+      "entity_id": "1",
+      "timestamp": 1,
+      "type": "EMAIL_OPENED",
+      "payload": {
+        "age": 17,
+        "provider": "hotmail"
       }
     }'
 
@@ -66,6 +81,7 @@ curl -X POST localhost:8080/event \
       "id": "2",
       "tenant_id": "1",
       "entity_id": "1",
+      "timestamp": 1,
       "type": "EMAIL_CLICKED",
       "payload": {
         "link": "http://google.com"
