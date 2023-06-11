@@ -48,15 +48,15 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 			keys := extractKeys(&e.LogicalExpression)
 			promises[e] = make(map[string]*redis.ZSliceCmd, 0)
 
+			min := "-inf"
+			max := "+inf"
+
+			if e.Window > 0 {
+				min = strconv.FormatInt(event.Timestamp-e.Window, 10)
+				max = strconv.FormatInt(event.Timestamp+e.Window, 10)
+			}
+
 			for _, k := range keys {
-				min := "-inf"
-				max := "+inf"
-
-				if e.Window > 0 {
-					min = strconv.FormatInt(event.Timestamp-e.Window, 10)
-					max = strconv.FormatInt(event.Timestamp+e.Window, 10)
-				}
-
 				opts := &redis.ZRangeBy{
 					Min:    min,
 					Max:    max,
