@@ -18,8 +18,8 @@ func Process(index *expression.Index, repository state.Repository, event types.E
 	states, _ := repository.Load(ctx, event, expressions)
 
 	response := map[string]bool{}
-	for e, v := range states {
-		response[e.Id] = expression.EvaluateExpression(v, e)
+	for _, e := range expressions {
+		response[e.Id] = expression.EvaluateExpression(states[e], e)
 	}
 
 	return response

@@ -75,7 +75,7 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 	})
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	states := make(map[*types.Expression]types.State)
@@ -95,8 +95,8 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 					prefix += k + ";"
 				}
 			} else {
-				response := command.Val()
-				values[id] = response != nil
+				response, _ := command.Slice()
+				values[id] = len(response) > 0
 			}
 		}
 

@@ -23,7 +23,7 @@ local function zvalue(keys, args)
    local lower_bound, upper_bound = unpack(args)
    local value = redis.call('ZRANGE', keys[1], lower_bound, upper_bound, 'BYSCORE', 'LIMIT', 0, 1, 'WITHSCORES')
 
-   return value[2]
+   return {value[2]} or {}
 end
 
 redis.register_function('zvalue', zvalue)
