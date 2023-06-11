@@ -59,11 +59,15 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 			for _, keys := range gambiKeysToLoad(e.LogicalExpression) {
 				id := strings.Join(keys, ";")
 
+				var fname string
+
 				if len(keys) > 1 {
-					expressionCommands[e][id] = pipe.FCall(ctx, "zsequence", keys, min, max)
+					fname = "zsequence"
 				} else {
-					expressionCommands[e][id] = pipe.FCall(ctx, "zvalue", keys, min, max)
+					fname = "zvalue"
 				}
+
+				expressionCommands[e][id] = pipe.FCall(ctx, fname, keys, min, max)
 			}
 		}
 
