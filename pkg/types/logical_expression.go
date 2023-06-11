@@ -5,7 +5,7 @@ type LogicalExpression struct {
 	Operands  []Operand `json:"operands"`
 }
 
-func (le LogicalExpression) Predicates() []*Predicate {
+func (le LogicalExpression) DeepPredicates() []*Predicate {
 	r := make([]*Predicate, 0)
 
 	for _, o := range le.Operands {
@@ -14,7 +14,7 @@ func (le LogicalExpression) Predicates() []*Predicate {
 			continue
 		}
 
-		r = append(r, o.LogicalExpression.Predicates()...)
+		r = append(r, o.LogicalExpression.DeepPredicates()...)
 	}
 
 	return r

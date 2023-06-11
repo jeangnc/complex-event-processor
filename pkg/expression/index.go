@@ -112,7 +112,7 @@ func (i *Index) Append(e types.Expression) {
 
 	i.expressions[e.Id] = &e
 
-	for _, p := range e.LogicalExpression.Predicates() {
+	for _, p := range e.LogicalExpression.DeepPredicates() {
 		keys := extractPredicateKeys(p)
 
 		n := i.predicateTree.Traverse(keys)

@@ -17,7 +17,7 @@ func TestPredicates(t *testing.T) {
 		},
 	}
 
-	predicates := le.Predicates()
+	predicates := le.DeepPredicates()
 	expected := []*Predicate{&a, &b}
 
 	if !reflect.DeepEqual(predicates, expected) {
