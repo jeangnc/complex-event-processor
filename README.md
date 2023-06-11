@@ -73,12 +73,9 @@ curl -X POST localhost:8080/event \
     -d '{
       "id": "2",
       "type": "EMAIL_CLICKED",
-      "timestamp": 2,
+      "timestamp": 200,
       "payload": {
         "link": "http://google.com"
       }
     }'
 ```
-
-sudo sysctl -w net.inet.ip.portrange.first=32768
-ab -p event.json -T application/json -c 100 -n 10000 http://127.0.0.1:8080/event
