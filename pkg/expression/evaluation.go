@@ -22,7 +22,6 @@ func evaluateLogicalExpression(e types.State, l *types.LogicalExpression) bool {
 		}
 
 		value, ok := e.Predicates[prefix+o.Predicate.Id]
-		fmt.Println(e)
 
 		if !ok {
 			value = false
