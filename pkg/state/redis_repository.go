@@ -45,7 +45,6 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 
 	_, err := r.client.Pipelined(ctx, func(pipe redis.Pipeliner) error {
 		for _, e := range expressions {
-			keys := extractKeys(&e.LogicalExpression)
 			promises[e] = make(map[string]*redis.ZSliceCmd, 0)
 
 			min := "-inf"
@@ -56,7 +55,7 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 				max = strconv.FormatInt(event.Timestamp+e.Window, 10)
 			}
 
-			for _, k := range keys {
+			for _, p := range e.LogicalExpression.DeepPredicates() {
 				opts := &redis.ZRangeBy{
 					Min:    min,
 					Max:    max,
@@ -64,7 +63,7 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 					Count:  1,
 				}
 
-				promises[e][k] = pipe.ZRangeByScoreWithScores(ctx, k, opts)
+				promises[e][p.Id] = pipe.ZRangeByScoreWithScores(ctx, p.Id, opts)
 			}
 		}
 
@@ -89,19 +88,4 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 	}
 
 	return states, nil
-}
-
-func extractKeys(l *types.LogicalExpression) []string {
-	values := make([]string, 0, 0)
-
-	for _, o := range l.Operands {
-		if o.LogicalExpression != nil {
-			values = append(values, extractKeys(o.LogicalExpression)...)
-			continue
-		}
-
-		values = append(values, o.Predicate.Id)
-	}
-
-	return values
 }
