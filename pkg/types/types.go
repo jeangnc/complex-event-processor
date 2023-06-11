@@ -22,7 +22,7 @@ type Impact struct {
 type Expression struct {
 	Id                string            `json:"id"`
 	LogicalExpression LogicalExpression `json:"logical_expression"`
-	Window            int64             `json:"window"`
+	Within            string            `json:"within"`
 }
 
 type Operand struct {

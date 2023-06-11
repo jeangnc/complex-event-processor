@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 	"github.com/redis/go-redis/v9"
@@ -51,9 +52,11 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 			min := "-inf"
 			max := "+inf"
 
-			if e.Window > 0 {
-				min = strconv.FormatInt(event.Timestamp-e.Window, 10)
-				max = strconv.FormatInt(event.Timestamp+e.Window, 10)
+			if e.Within != "" {
+				t := time.Unix(event.Timestamp, 0)
+				duration, _ := time.ParseDuration(e.Within)
+				min = strconv.FormatInt(t.Add(-duration).Unix(), 10)
+				max = strconv.FormatInt(t.Add(duration).Unix(), 10)
 			}
 
 			for _, keys := range gambiKeysToLoad(e.LogicalExpression) {
