@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/jeangnc/complex-event-processor/pkg/event"
@@ -23,6 +24,8 @@ func NewEventHandler(index *expression.Index, repository state.Repository) func(
 		}
 
 		response := event.Process(index, repository, e)
+		log.Print("Response: ", response)
+
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
 	}
