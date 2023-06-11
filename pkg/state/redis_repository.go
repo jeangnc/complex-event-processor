@@ -3,6 +3,7 @@ package state
 import (
 	"context"
 	"strconv"
+	"strings"
 
 	"github.com/jeangnc/complex-event-processor/pkg/types"
 	"github.com/redis/go-redis/v9"
@@ -41,11 +42,11 @@ func (r RedisRepository) Save(ctx context.Context, event types.Event, impact typ
 }
 
 func (r RedisRepository) Load(ctx context.Context, event types.Event, expressions []*types.Expression) (map[*types.Expression]types.State, error) {
-	promises := make(map[*types.Expression]map[string]*redis.ZSliceCmd)
+	expressionCommands := make(map[*types.Expression]map[string]*redis.Cmd)
 
 	_, err := r.client.Pipelined(ctx, func(pipe redis.Pipeliner) error {
 		for _, e := range expressions {
-			promises[e] = make(map[string]*redis.ZSliceCmd, 0)
+			expressionCommands[e] = make(map[string]*redis.Cmd, 0)
 
 			min := "-inf"
 			max := "+inf"
@@ -55,15 +56,14 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 				max = strconv.FormatInt(event.Timestamp+e.Window, 10)
 			}
 
-			for _, p := range e.LogicalExpression.DeepPredicates() {
-				opts := &redis.ZRangeBy{
-					Min:    min,
-					Max:    max,
-					Offset: 0,
-					Count:  1,
-				}
+			for _, keys := range gambiKeysToLoad(e.LogicalExpression) {
+				id := strings.Join(keys, ";")
 
-				promises[e][p.Id] = pipe.ZRangeByScoreWithScores(ctx, p.Id, opts)
+				if len(keys) > 1 {
+					expressionCommands[e][id] = pipe.FCall(ctx, "zsequence", keys, min, max)
+				} else {
+					expressionCommands[e][id] = pipe.FCall(ctx, "zvalue", keys, min, max)
+				}
 			}
 		}
 
@@ -76,16 +76,54 @@ func (r RedisRepository) Load(ctx context.Context, event types.Event, expression
 
 	states := make(map[*types.Expression]types.State)
 
-	for _, e := range expressions {
+	for e, commands := range expressionCommands {
 		values := make(map[string]bool)
 
-		for predicateId, promise := range promises[e] {
-			response := promise.Val()
-			values[predicateId] = len(response) > 0
+		for id, command := range commands {
+			keys := strings.Split(id, ";")
+
+			if len(keys) > 1 {
+				prefix := ""
+				response, _ := command.Slice()
+
+				for i, k := range keys {
+					values[prefix+k] = response[i] != nil
+					prefix += k + ";"
+				}
+			} else {
+				response := command.Val()
+				values[id] = response != nil
+			}
 		}
 
 		states[e] = types.State{Predicates: values}
 	}
 
 	return states, nil
+}
+
+func gambiKeysToLoad(l types.LogicalExpression) [][]string {
+	r := make([][]string, 0, 0)
+
+	if l.Connector == types.CONNECTOR_SEQUENCE {
+		keys := make([]string, 0, 0)
+
+		for _, o := range l.Operands {
+			keys = append(keys, o.Predicate.Id)
+		}
+
+		r = append(r, keys)
+		return r
+	}
+
+	for _, o := range l.Operands {
+		if o.LogicalExpression != nil {
+			r = append(r, gambiKeysToLoad(*o.LogicalExpression)...)
+			continue
+		}
+
+		r = append(r, []string{o.Predicate.Id})
+	}
+
+	return r
 }

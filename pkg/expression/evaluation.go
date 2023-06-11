@@ -13,6 +13,7 @@ func EvaluateExpression(e types.State, ex *types.Expression) bool {
 
 func evaluateLogicalExpression(e types.State, l *types.LogicalExpression) bool {
 	values := make([]bool, 0, 0)
+	prefix := ""
 
 	for _, o := range l.Operands {
 		if o.LogicalExpression != nil {
@@ -20,7 +21,9 @@ func evaluateLogicalExpression(e types.State, l *types.LogicalExpression) bool {
 			continue
 		}
 
-		value, ok := e.Predicates[o.Predicate.Id]
+		value, ok := e.Predicates[prefix+o.Predicate.Id]
+		fmt.Println(e)
+
 		if !ok {
 			value = false
 		}
@@ -29,12 +32,16 @@ func evaluateLogicalExpression(e types.State, l *types.LogicalExpression) bool {
 			value = !value
 		}
 
+		if l.Connector == types.CONNECTOR_SEQUENCE {
+			prefix += o.Predicate.Id + ";"
+		}
+
 		values = append(values, value)
 	}
 
 	result := false
 	switch l.Connector {
-	case types.CONNECTOR_AND:
+	case types.CONNECTOR_AND, types.CONNECTOR_SEQUENCE:
 		result = util.SliceAll(values)
 	case types.CONNECTOR_OR:
 		result = util.SliceAny(values)

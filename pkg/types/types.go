@@ -2,6 +2,7 @@ package types
 
 const CONNECTOR_AND string = "and"
 const CONNECTOR_OR string = "or"
+const CONNECTOR_SEQUENCE string = "sequence"
 
 type Event struct {
 	Id        string                 `json:"id"`

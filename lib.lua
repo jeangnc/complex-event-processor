@@ -4,16 +4,13 @@ local function zsequence(keys, args)
    local values = {}
 
    for i, k in ipairs(keys) do
-      local value = {}
+      local value = redis.call('ZRANGE', k, lower_bound, upper_bound, 'BYSCORE', 'LIMIT', 0, 1, 'WITHSCORES')
 
-      if lower_bound then
-         value = redis.call('ZRANGE', k, lower_bound, upper_bound, 'BYSCORE', 'LIMIT', 0, 1, 'WITHSCORES')
-
-         if #value > 0 then
-            lower_bound = value[2] + 1
-         else
-            lower_bound = false
-         end
+      if #value > 0 then
+         value = value[2]
+         lower_bound = value + 1
+      else
+         value = false
       end
 
       table.insert(values, value)
@@ -22,4 +19,13 @@ local function zsequence(keys, args)
    return values
 end
 
+local function zvalue(keys, args)
+   local lower_bound, upper_bound = unpack(args)
+   local value = redis.call('ZRANGE', keys[1], lower_bound, upper_bound, 'BYSCORE', 'LIMIT', 0, 1, 'WITHSCORES')
+
+   return value[2]
+end
+
+redis.register_function('zvalue', zvalue)
 redis.register_function('zsequence', zsequence)
+
