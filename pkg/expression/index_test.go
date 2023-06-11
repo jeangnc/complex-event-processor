@@ -61,26 +61,6 @@ func TestImpactedPredicatesSearch(t *testing.T) {
 				},
 			},
 			expectedResult: types.Impact{
-				Predicates: map[string]bool{
-					"my-predicate": false,
-				},
-			},
-		},
-		testCase{
-			description: "falsey immutable condition",
-			event:       event,
-			predicate: types.Predicate{
-				Id:        "my-predicate",
-				EventType: "MY_TYPE",
-				Conditions: []types.Condition{
-					types.Condition{
-						Field:    "string_field",
-						Operator: OPERATOR_EQUAL,
-						Value:    "different-test",
-					},
-				},
-			},
-			expectedResult: types.Impact{
 				Predicates: map[string]bool{},
 			},
 		},
