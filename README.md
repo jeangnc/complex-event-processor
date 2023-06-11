@@ -25,8 +25,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "not_equal",
 				  "value": "gmail"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  },
 		  {
@@ -39,8 +38,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "equal",
 				  "value": "http://google.com"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  }
 		]
@@ -69,8 +67,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "not_equal",
 				  "value": "gmail"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  },
 		  {
@@ -83,8 +80,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "equal",
 				  "value": "http://google.com"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  }
 		]
@@ -108,8 +104,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "equal",
 				  "value": "http://google.com"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  },
 		  {
@@ -127,8 +122,7 @@ curl -X POST localhost:8080/expression \
 				  "operator": "not_equal",
 				  "value": "gmail"
 				}
-			  ],
-			  "immutable": true
+			  ]
 			}
 		  }
 		]
@@ -139,8 +133,8 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "1",
-      "timestamp": 1,
       "type": "EMAIL_OPENED",
+      "timestamp": 1,
       "payload": {
         "email": "john@example.org"
       }
@@ -150,8 +144,8 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "1",
-      "timestamp": 1,
       "type": "EMAIL_OPENED",
+      "timestamp": 1,
       "payload": {
         "age": 17,
         "provider": "hotmail"
@@ -162,8 +156,8 @@ curl -X POST localhost:8080/event \
     -H 'Content-Type: application/json ' \
     -d '{
       "id": "2",
-      "timestamp": 2,
       "type": "EMAIL_CLICKED",
+      "timestamp": 2,
       "payload": {
         "link": "http://google.com"
       }
