@@ -1,2 +1,2 @@
 register_function:
-	cat lib.lua | docker exec -i redis redis-cli -x FUNCTION LOAD REPLACE
+	cat lib.lua | redis-cli -x FUNCTION LOAD REPLACE
