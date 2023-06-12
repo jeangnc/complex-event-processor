@@ -2,6 +2,7 @@ package state
 
 import (
 	"context"
+	"io/ioutil"
 	"strconv"
 	"strings"
 	"time"
@@ -14,11 +15,13 @@ type RedisRepository struct {
 	client *redis.Client
 }
 
-func NewRedisRepository(addr string, password string) RedisRepository {
+func NewRedisRepository(redisAddr string, functionsFile string) RedisRepository {
 	client := redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Password: password,
+		Addr:     redisAddr,
+		Password: "",
 	})
+
+	loadLib(client, functionsFile)
 
 	return RedisRepository{
 		client: client,
@@ -133,4 +136,15 @@ func gambiKeysToLoad(l types.LogicalExpression) [][]string {
 	}
 
 	return r
+}
+
+func loadLib(client *redis.Client, functionsFile string) {
+	ctx := context.Background()
+	content, err := ioutil.ReadFile(functionsFile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	client.FunctionLoadReplace(ctx, string(content))
 }
